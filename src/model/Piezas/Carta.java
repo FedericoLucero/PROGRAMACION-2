@@ -1,7 +1,5 @@
 package model.Piezas;
 
-public class Carta {
-
-
-
+public abstract class Carta {
+    private int id;
 }

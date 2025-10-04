@@ -1,4 +1,4 @@
-package model.Personas.Caracteristicas;
+package model.Jugadores;
 
 public class Profesion {
     private String titulo;
