@@ -12,25 +12,10 @@ public class Juego {
 
     public boolean jugar() {
         System.out.println("=== Comienza el juego ===");
-        for (Jugador j : jugadores) {
-            System.out.println("Jugador: " + j.getNombre());
-        }
+
+        /// juego
+
         return false;
-    }
-
-    // Método que pide datos al usuario
-    public void cargarJugadores() {
-        Scanner sc = new Scanner(System.in);
-
-        for (int i = 0; i < jugadores.length; i++) {
-            System.out.print("Ingrese ID del jugador " + (i + 1) + ": ");
-            String id = sc.nextLine();
-
-            System.out.print("Ingrese nombre del jugador " + (i + 1) + ": ");
-            String nombre = sc.nextLine();
-
-            jugadores[i] = new Jugador(id, nombre);
-        }
     }
 
     public Jugador[] getJugadores() {return jugadores;}
