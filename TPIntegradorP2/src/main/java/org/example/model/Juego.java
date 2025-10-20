@@ -73,6 +73,11 @@ public class Juego {
             // todo⚠️⚠️ aun no se esta trabajando en las posiciones con el tablero ️⚠️⚠️
             // todo ahora queda trabajar con el tablero (hay que definirlo bien)
 
+            //Adentro de este bloque podemos verificar el color final de la casilla y las que hay entre medio
+
+            tablero.accion(jugadorTurno,posicionAnterior,posicionActual);
+
+
             switch (tablero.getCasillas().get(posicionActual).getColor()){  // verifica el color de la casilla
                 case "amarilla":
                     System.out.println("Caiste en una casilla amarilla");
@@ -116,4 +121,8 @@ public class Juego {
 
     public Tablero getTablero() {return tablero;}
     public void setTablero(Tablero tablero) {this.tablero = tablero;}
+
+
+
+
 }
