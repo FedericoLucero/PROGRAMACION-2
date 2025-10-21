@@ -1,4 +1,4 @@
-package org.example.db;
+package org.example.utils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -12,7 +12,7 @@ import java.sql.Statement;
 public class ConexionDB {
 
     /** Ruta del archivo SQLite (se creará en el directorio raíz del proyecto). */
-    private static final String URL = "jdbc:sqlite:agenda.sqlite";
+    private static final String URL = "jdbc:sqlite:BDIntegrador.sqlite";
 
     /**
      * Conecta con la base de datos SQLite.
@@ -62,7 +62,7 @@ public class ConexionDB {
     /**
      * Crea todas las tablas necesarias para la agenda.
      * Si ya existen, las elimina primero.
-     */
+     *
     public static void inicializarBase() {
         try (Connection conn = getConnection()) {
             if (conn == null) {
@@ -113,4 +113,6 @@ public class ConexionDB {
             System.err.println(" Error al crear las tablas: " + e.getMessage());
         }
     }
+
+     */
 }

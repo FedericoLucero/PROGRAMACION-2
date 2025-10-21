@@ -14,6 +14,10 @@ public class Casilla {
         this.color = color;
     }
 
+    public void mostrarCasilla() {
+        System.out.println("Casilla: " + id + " | Color: " + color);
+    }
+
     /**
      * Getters y Setters
      */

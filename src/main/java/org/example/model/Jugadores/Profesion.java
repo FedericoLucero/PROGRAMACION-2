@@ -14,6 +14,15 @@ public class Profesion {
         this.salario = salario;
     }
 
+    public Profesion() {
+    }
+
+    public void mostrarProfesion() {
+        System.out.println("Profesión: " + titulo);
+        System.out.println("Salario: $" + salario);
+    }
+
+
     public int getSalario() {return salario;}
     public void setSalario(int salario) {this.salario = salario;}
 

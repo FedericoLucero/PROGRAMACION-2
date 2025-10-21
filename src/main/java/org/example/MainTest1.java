@@ -1,6 +1,7 @@
 package org.example;
 
 import org.example.model.Juego;
+import org.example.utils.UserInput;
 
 public class MainTest1 {
 
@@ -11,7 +12,11 @@ public class MainTest1 {
 
         boolean jugarDeNuevo;
         do {    // bucle "voler a jugar"
-            Juego juego = new Juego(); // clase principal donde se realiza el juego
+
+            UserInput UI = new  UserInput();
+            int cantJugadores = UI.getInt("Ingrese cantidad de jugadores ",1,4);
+
+            Juego juego = new Juego(cantJugadores); // clase principal donde se realiza el juego
             jugarDeNuevo = juego.jugar(); // jugar el juego
 
         } while (jugarDeNuevo);

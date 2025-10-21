@@ -22,7 +22,7 @@ public class Jugador {
         this.profesion = null;
         this.patrimoio = 0;
         this.familia = new ArrayList<NPC>();
-        this.posicion = 0;
+        this.posicion = -1;
 
     }
 

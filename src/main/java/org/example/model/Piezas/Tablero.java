@@ -29,6 +29,7 @@ public class Tablero {
     }
 
     //Metodo para ver casillas intermedias entre posicion inicial y final, segun casillas hacer
+
     public void accion(Jugador jugador,int posicionInicial, int posicionFinal){
         //bucle que recorra las casillas del tablero entre pi y pf
         int contadorAmarillo = 0; //estos dos contadores son para probara futuro se remplazan con acciones dentro de c/caso
