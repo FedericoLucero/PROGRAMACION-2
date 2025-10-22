@@ -4,14 +4,18 @@ public class Profesion {
     private int id;
     private String descripcion;
     private String titulo;
-    private int sueldo;
+    private int sueldo = 0;
 
     public Profesion() {
     }
 
+    public Profesion( String titulo, int sueldo) {
+        this.titulo = titulo;
+        this.sueldo = sueldo;
+    }
+
     public void mostrarProfesion() {
-        System.out.println("Profesión: " + titulo);
-        System.out.println("Salario: $" + sueldo);
+        System.out.println("Profesión: " + titulo + " sueldo: " + sueldo);
     }
 
     /**

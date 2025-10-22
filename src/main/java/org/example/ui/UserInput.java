@@ -44,6 +44,28 @@ public class UserInput {
         }
     }
 
+    public boolean getBolean(String prompt) {
+        int value;
+        while (true) {
+            System.out.println(prompt);
+            if (scanner.hasNextInt()) {
+                value = scanner.nextInt();
+                scanner.nextLine(); // limpiar buffer
+                if (value == 1) {
+                    return true;
+                } else if  (value == 2) {
+                    return false;
+                } else {
+                    System.out.println("⚠️ Error: el número debe estar entre " + 1 + " y " + 2);
+                }
+            } else {
+                System.out.println("⚠️ Error: ingrese un número entero válido");
+                scanner.nextLine(); // limpiar buffer
+            }
+        }
+
+    }
+
     // Cerrar scanner
     public void close() {
         scanner.close();
