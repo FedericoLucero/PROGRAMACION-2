@@ -1,7 +1,7 @@
 package org.example;
 
 import org.example.model.Juego;
-import org.example.utils.UserInput;
+import org.example.ui.UserInput;
 
 public class MainTest1 {
 

@@ -1,5 +1,7 @@
 package org.example.model.Piezas;
 
+import org.example.utils.ConsolaColor;
+
 public class Casilla {
     private int id;
     private String color;
@@ -15,7 +17,33 @@ public class Casilla {
     }
 
     public void mostrarCasilla() {
-        System.out.println("Casilla: " + id + " | Color: " + color);
+        String colorTexto;
+
+        switch (color.toLowerCase()) {
+            case "amarilla":
+                colorTexto = ConsolaColor.AMARILLO;
+                break;
+            case "azul":
+                colorTexto = ConsolaColor.AZUL;
+                break;
+            case "roja":
+                colorTexto = ConsolaColor.ROJO;
+                break;
+            case "verde":
+                colorTexto = ConsolaColor.VERDE;
+                break;
+            case "rosa":
+                colorTexto = ConsolaColor.ROSA;
+                break;
+            case "stop":
+                colorTexto = ConsolaColor.GRIS;
+                break;
+            default:
+                colorTexto = ConsolaColor.RESET;
+                break;
+        }
+
+        System.out.println(colorTexto + "Casilla: " + id + " | Color: " + color + ConsolaColor.RESET);
     }
 
     /**

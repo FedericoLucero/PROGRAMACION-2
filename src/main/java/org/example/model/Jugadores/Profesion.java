@@ -1,32 +1,31 @@
 package org.example.model.Jugadores;
 
 public class Profesion {
+    private int id;
+    private String descripcion;
     private String titulo;
-    private int salario;
-
-    /**
-     * Constructor de Profesion
-     * @param titulo titulo de la profesion
-     * @param salario salario de la profesion
-     */
-    public Profesion(String titulo, int salario) {
-        this.titulo = titulo;
-        this.salario = salario;
-    }
+    private int sueldo;
 
     public Profesion() {
     }
 
     public void mostrarProfesion() {
         System.out.println("Profesión: " + titulo);
-        System.out.println("Salario: $" + salario);
+        System.out.println("Salario: $" + sueldo);
     }
 
+    /**
+     * Getters y Setters
+     */
+    public String getDescripcion() {return descripcion;}
+    public void setDescripcion(String descripcion) {this.descripcion = descripcion;}
 
-    public int getSalario() {return salario;}
-    public void setSalario(int salario) {this.salario = salario;}
+    public int getId() {return id;}
+    public void setId(int id) {this.id = id;}
+
+    public int getSueldo() {return sueldo;}
+    public void setSueldo(int sueldo) {this.sueldo = sueldo;}
 
     public String getTitulo() {return titulo;}
     public void setTitulo(String titulo) {this.titulo = titulo;}
-
 }
