@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class ConexionBD {
+public class ConexionBD{
 
     private final String url;
     private Connection connection;
@@ -23,5 +23,20 @@ public class ConexionBD {
             System.err.println("Error al conectar: " + e.getMessage());
         }
         return connection;
+    }
+
+
+    public void cerrarConexion() throws SQLException {
+        try {
+            if (connection != null && !connection.isClosed()) {
+                connection.close();
+                System.out.println("Conexión cerrada exitosamente");
+            }
+        } catch (Exception e) {
+            System.out.println("Error al cerrar conexión: " + e.getMessage());
+            connection.close();
+        }finally {
+            connection.close();
+        }
     }
 }

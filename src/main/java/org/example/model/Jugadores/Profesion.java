@@ -9,6 +9,11 @@ public class Profesion {
     public Profesion() {
     }
 
+    //constructor con solo titulo
+    public Profesion(String titulo) {
+        this.titulo = titulo;
+    }
+
     public void mostrarProfesion() {
         System.out.println("Profesión: " + titulo);
         System.out.println("Salario: $" + sueldo);
