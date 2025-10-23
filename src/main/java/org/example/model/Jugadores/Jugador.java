@@ -23,7 +23,7 @@ public class Jugador {
      * @param nombre nombre de jugador
      */
     public Jugador(int id, String nombre) {
-        this.id = id;
+        this.id_jugador = id;
         this.nombre = nombre;
         this.profesion = null;
         this.patrimonio = 0;
@@ -52,18 +52,18 @@ public class Jugador {
     }
 
     public void actualizarPatrimonio(int sueldo) {
-        setPatrimoio(this.patrimoio + sueldo);
+        setPatrimonio(this.patrimonio + sueldo);
     }
 
     /**
      * Metodo que mustra los datos del jugador
      */
     public void mostrarJugador(){
-        System.out.println("ID: " + getId() + " Nombre: " + getNombre() + " Patrimoio: " + getPatrimoio() );
+        System.out.println("ID: " + getId() + " Nombre: " + getNombre() + " Patrimoio: " + getPatrimonio() );
     }
 
     public void mostrarPatrimonioJugador(){
-        System.out.println(" Nombre: " + getNombre() + " Patrimoio: " + getPatrimoio() );
+        System.out.println(" Nombre: " + getNombre() + " Patrimoio: " + getPatrimonio() );
     }
 
     /**

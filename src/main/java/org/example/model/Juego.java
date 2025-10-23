@@ -108,8 +108,7 @@ public class Juego {
             cantJugadas = cantJugadas + 1;
         } while (seguirJugando);
 
-        UserInput userInput = new UserInput();
-        return userInput.getBolean("¿DESEA JUGAR DE NUEVO?\n1. si\n2. no"); // true volver a jugar o false no volver a jugar
+        return UserInput.getBolean("¿DESEA JUGAR DE NUEVO?\n1. si\n2. no"); // true volver a jugar o false no volver a jugar
     }
 
 
@@ -144,9 +143,8 @@ public class Juego {
      * Usa la clase {UserInput} para leer los nombres desde consola,
      */
     public void pedirDatosJugadores() {
-        UserInput UI = new UserInput();
         for (int i = 1; i <= jugadores.length; i++) {
-            Jugador jugador = new Jugador(i, UI.getString("Ingrese nombre del jugador " + i + " ", 1, 10)); // validando que la longitud sea entre 1 y 10 caracteres.
+            Jugador jugador = new Jugador(i, UserInput.getString("Ingrese nombre del jugador " + i + " ", 1, 10)); // validando que la longitud sea entre 1 y 10 caracteres.
             jugadores[i - 1] = jugador;
         }
     }
@@ -200,7 +198,9 @@ public class Juego {
             c.mostrarCasilla();
 
             if (c.getColor().equals("verde")) {
-                jugador.actualizarPatrimonio(jugador.getProfesion().getSueldo());
+                if (jugador.getProfesion()!= null){
+                    jugador.actualizarPatrimonio(jugador.getProfesion().getSueldo());
+                }
                 //jugador.mostrarPatrimonioJugador();
             }
 
