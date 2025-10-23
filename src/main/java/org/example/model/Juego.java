@@ -41,56 +41,75 @@ public class Juego {
 
             Jugador jugadorTurno = cambiarJugador(cantJugadas); // cambia el jugador
 
-            int posicion = RecorrerHastaSiguientePosicion(jugadorTurno.getPosicion(),girarRuleta()); //metodo que calcula la siguiente posicion (teniendo en cuenta stops y fin del tablero)
-            moverJugador(jugadorTurno, posicion); // metodo que mueve al jugador a la posicion calculada
+            int posicion = RecorrerHastaSiguientePosicion(jugadorTurno.getPosicion(),girarRuleta(), jugadorTurno); //metodo que calcula la siguiente posicion (teniendo en cuenta stops y fin del tablero)
 
-            int idCasilla = tablero.getCasillas().get(posicion).getId(); // pedimos el id de la casilla para mostrarlo (id = index + 1) (index del arraylist)
-            switch (tablero.getCasillas().get(posicion).getColor()) {
+            if (posicion != tablero.getCasillas().size()){ // verifica que el jugador no esté en el final
 
-                case "amarilla":
-                    System.out.println(AMARILLO + "Caiste en una casilla amarilla: POS: " + idCasilla + RESET);
-                    // acción random
-                    break;
+                jugadorTurno.moverJugador(posicion); // metodo que mueve al jugador a la posicion calculada
 
-                case "azul":
-                    System.out.println(ConsolaColor.AZUL + "Caiste en una casilla azul: POS: " + idCasilla + ConsolaColor.RESET);
-                    // accion de cambiar profesion
-                    break;
+                int idCasilla = tablero.getCasillas().get(posicion).getId(); // pedimos el id de la casilla para mostrarlo (id = index + 1) (index del arraylist)
+                switch (tablero.getCasillas().get(posicion).getColor()) {
 
-                case "roja":
-                    System.out.println(ROJO + "Caiste en una casilla roja: POS: " + idCasilla + RESET);
-                    // acción de pagar
-                    break;
+                    case "amarilla":
+                        System.out.println(AMARILLO + "Caiste en una casilla amarilla: POS: " + idCasilla + RESET);
+                        // todo acción random (quizas girar ruleta y que te pueda tocar cualquier carta)
 
-                case "verde":
-                    System.out.println(VERDE + "Caiste en una casilla verde: POS: " + idCasilla + RESET);
-                    // acción de cobro
-                    break;
+                        break;
 
-                case "rosa":
-                    System.out.println(ROSA + "Caiste en una casilla rosa: POS: " + idCasilla + RESET);
-                    // acción de familia
-                    break;
+                    case "azul":
+                        System.out.println(ConsolaColor.AZUL + "Caiste en una casilla azul: POS: " + idCasilla + ConsolaColor.RESET);
+                        // todo accion de elegir entre dos profesiones de un mismo nivel (podria ser que primero te de nivel 1, luego nievl 2... creciendo)
 
-                case "stop":
-                    System.out.println(GRIS + "Caiste en una casilla stop: POS: " + idCasilla + RESET);
-                    // acción especial
-                    break;
+                        break;
 
-                default:
-                    System.out.println(GRIS + "Color no reconocido: POS: " + idCasilla + RESET);
-                    break;
+                    case "roja":
+                        System.out.println(ROJO + "Caiste en una casilla roja: POS: " + idCasilla + RESET);
+                        // todo acción de pagar impuesto
+
+                        break;
+
+                    case "verde":
+                        System.out.println(VERDE + "Caiste en una casilla verde: POS: " + idCasilla + RESET);
+                        // todo acción de cobrar bono
+                        // todo ya se cobro el sueldo normal cada vez que se paso por "arriba" de una casilla verde
+
+                        break;
+
+                    case "rosa":
+                        System.out.println(ROSA + "Caiste en una casilla rosa: POS: " + idCasilla + RESET);
+                        // todo acción de que te toque familia
+                        // todo falta crear casillas rosas en la bd
+
+                        break;
+
+                    case "stop":
+                        System.out.println(GRIS + "Caiste en una casilla stop: POS: " + idCasilla + RESET);
+                        // todo acción especial (las casiilas de stop son siempre fijas en el tablero)
+                        // todo por ejemplo casilla 5 siempre te obliga a elegir una profesion
+                        // todo por ejemplo casilla 11 simpre te hace girar la ruleta con solo dos opciones (cobrar/pagar)
+
+                        if (idCasilla==5){
+                            jugadorTurno.setProfesion(new Profesion("ingeEjemplo",100)); //profesion de prueba
+                            jugadorTurno.getProfesion().mostrarProfesion();
+                        }
+
+                        break;
+
+                    default:
+                        System.out.println(GRIS + "Color no reconocido: POS: " + idCasilla + RESET);
+                        break;
+                }
             }
 
-
-            if (cantJugadas > 10){ /// todo ⚠️ verificar el fin real del juego ⚠️
+            if (cantJugadas > 10){ /// todo verificar el fin real del juego
                 seguirJugando = false;
             }
 
             cantJugadas = cantJugadas + 1;
         } while (seguirJugando);
 
-        return false; // true volver a jugar o false no volver a jugar
+        UserInput userInput = new UserInput();
+        return userInput.getBolean("¿DESEA JUGAR DE NUEVO?\n1. si\n2. no"); // true volver a jugar o false no volver a jugar
     }
 
 
@@ -119,7 +138,6 @@ public class Juego {
             System.err.println("Error al inicializar el tablero: " + e.getMessage());
         }
     }
-
 
     /**
      * Solicita los nombres de los jugadores y los guarda en el arreglo
@@ -167,7 +185,7 @@ public class Juego {
      * @param numRuleta número de pasos que indica la ruleta.
      * @return la nueva posición final del jugador después de avanzar.
      */
-    public int RecorrerHastaSiguientePosicion(int posicionAnterior, int numRuleta) {
+    public int RecorrerHastaSiguientePosicion(int posicionAnterior, int numRuleta, Jugador jugador) {
         int i = posicionAnterior;
 
         for (int pasos = 0; pasos < numRuleta; pasos++) {
@@ -181,21 +199,16 @@ public class Juego {
             Casilla c = tablero.getCasillas().get(i);
             c.mostrarCasilla();
 
+            if (c.getColor().equals("verde")) {
+                jugador.actualizarPatrimonio(jugador.getProfesion().getSueldo());
+                //jugador.mostrarPatrimonioJugador();
+            }
+
             if (c.getColor().equals("stop")) {
                 return i;
             }
         }
         return i;
-    }
-
-    /**
-     * Mueve al jugador a una nueva posición en el tablero.
-     *
-     * @param jugadorTurno el jugador que se va a mover.
-     * @param posicionSiguiente la posición destino del jugador.
-     */
-    public void moverJugador(Jugador jugadorTurno, int posicionSiguiente) {
-        jugadorTurno.setPosicion(posicionSiguiente);
     }
 
     /**

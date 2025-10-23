@@ -23,6 +23,7 @@ public class Jugador {
      * @param nombre nombre de jugador
      */
     public Jugador(int id, String nombre) {
+        this.id = id;
         this.nombre = nombre;
         this.profesion = null;
         this.patrimonio = 0;
@@ -41,13 +42,28 @@ public class Jugador {
 
     }
 
+    /**
+     * Mueve al jugador a una nueva posición en el tablero.
+     *
+     * @param posicionSiguiente la posición destino del jugador.
+     */
+    public void moverJugador(int posicionSiguiente) {
+        setPosicion(posicionSiguiente);
+    }
 
+    public void actualizarPatrimonio(int sueldo) {
+        setPatrimoio(this.patrimoio + sueldo);
+    }
 
     /**
      * Metodo que mustra los datos del jugador
      */
     public void mostrarJugador(){
-        System.out.println("ID: " + getId() + " Nombre: " + getNombre() );
+        System.out.println("ID: " + getId() + " Nombre: " + getNombre() + " Patrimoio: " + getPatrimoio() );
+    }
+
+    public void mostrarPatrimonioJugador(){
+        System.out.println(" Nombre: " + getNombre() + " Patrimoio: " + getPatrimoio() );
     }
 
     /**
