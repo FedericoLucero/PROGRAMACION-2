@@ -1,25 +1,25 @@
 package org.example;
 
 import static org.example.utils.ConsolaColor.*;
+
+import org.example.GUI.VentanaJuego;
 import org.example.dao.TableroDAO;
 import org.example.model.Jugadores.*;
-import org.example.model.Piezas.*;
 import org.example.utils.ConsolaColor;
 import org.example.ui.UserInput;
-import org.example.utils.VentanaJuego;
 
 public class Juego {
 
     private Jugador[] jugadores;
     // private Ruleta ruleta = new Ruleta();
-
     private TableroDAO tableroDAO = new TableroDAO();
 
     /**
      *  Constructor Juego
      */
     public Juego(int cantJugadores) {
-        this.jugadores = new Jugador[cantJugadores];
+        this.jugadores = new Jugador[cantJugadores]; // todo deberiamos pasar solo el array de jugadores, de ahi sacamos la cantidad de jugadores e inicializamos todo ??
+
     }
 
     /**
@@ -31,14 +31,14 @@ public class Juego {
         // metodo que pide los nombres a los jugadores
         pedirDatosJugadores();
 
-        // metodo que muestra el tablero
+        // metodo que muestra el tablero en consola
         tableroDAO.mostrarTablero();
 
         System.out.println("=== Comienza el juego ===");
         VentanaJuego ventanaJuego = new VentanaJuego();
 
         // metodo que retorna la cantidad de casillas del tablero
-        int cantCasillas = tableroDAO.contarCasillas();
+        int cantCasillas = tableroDAO.contarCasillas(); // todo deberia ser un atributo de la clase tablero ??
 
         // variable de cantidad de movimientos actuales
         int cantJugadas = 0;
@@ -52,11 +52,8 @@ public class Juego {
             // metodo que cambia el jugador
             Jugador jugadorTurno = cambiarJugador(cantJugadas);
 
-            // metodo que gira la ruleta y retorna numero del 1 al 10
-            int i = ventanaJuego.girarRuletaSync();
-
             // metodo que calcula la siguiente posicion (teniendo en cuenta stops y fin del tablero)
-            int posicion = tableroDAO.recorrerHastaSiguientePosicion(jugadorTurno,i);
+            int posicion = tableroDAO.recorrerHastaSiguientePosicion(jugadorTurno,girarRuleta(ventanaJuego));
 
             // if que verifica que el jugador no esté en el final
             if (posicion != cantCasillas){
@@ -171,10 +168,15 @@ public class Juego {
         return jugadorTurno;
     }
 
-    /*
+    /**
      * Simula el giro de la ruleta e imprime el resultado obtenido.
      * @return el número de posiciones que el jugador deberá moverse en el tablero.
+    */
+    public int girarRuleta( VentanaJuego ventanaJuego) {
+        return ventanaJuego.girarRuletaSync();
+    }
 
+        /*
     public int girarRuleta() {
         System.out.println("¡Gira la ruleta!");
 

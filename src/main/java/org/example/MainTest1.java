@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.GUI.Pantalla;
 import org.example.ui.UserInput;
 
 public class MainTest1 {
