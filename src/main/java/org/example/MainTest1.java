@@ -1,12 +1,6 @@
 package org.example;
 
-import org.example.dao.JugadorDAO;
-import org.example.model.Juego;
-import org.example.model.Jugadores.Jugador;
-import org.example.model.Jugadores.Profesion;
 import org.example.ui.UserInput;
-
-import java.sql.DriverManager;
 
 public class MainTest1 {
 
@@ -16,16 +10,21 @@ public class MainTest1 {
     public static void main(String[] args) {
 
         boolean jugarDeNuevo;
-        do {    // bucle "voler a jugar"
 
+        // bucle "voler a jugar"
+        do {
+
+            // metodo que pide la cantidad de jugadores (min 1, max 4)
             int cantJugadores = UserInput.getInt("Ingrese cantidad de jugadores ",1,4);
 
-            Juego juego = new Juego(cantJugadores); // clase principal donde se realiza el juego
-            jugarDeNuevo = juego.jugar(); // jugar el juego
+            // objeto principal donde se realiza la partida
+            Juego juego = new Juego(cantJugadores);
+
+            // metodo donde se realiza la partida
+            jugarDeNuevo = juego.jugar();
 
         } while (jugarDeNuevo);
         System.out.println("=== JUEGO TERMINADO ===");
-
     }
 
 }
