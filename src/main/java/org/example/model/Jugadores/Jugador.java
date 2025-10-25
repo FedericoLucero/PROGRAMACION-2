@@ -1,8 +1,15 @@
 package org.example.model.Jugadores;
 
+import org.example.bd.ConexionBD;
 import org.example.model.NPCs.NPC;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
+
+
+import java.sql.*;
 
 public class Jugador {
     private int id_jugador;
@@ -11,41 +18,35 @@ public class Jugador {
     private int patrimonio;
     private ArrayList<NPC> familia;
     private int posicion;
-    private int estado_civil; //0/1 porque sqlite no tiene booleano
+    private int estado_civil; // 0/1 porque sqlite no tiene booleano
     private int hijos;
-    private int deuda; //Puede pedirse prestamos al banco, aca se registran
+    private int deuda;
 
+    private static final String url_dinamica ="jdbc:sqlite:BD_LIFE_DINAMIC.sqlite";
+    // ==========================
+    // CONSTRUCTORES
+    // ==========================
 
-    /**
-     * Constructor de Jugador
-     * @param id id del jugador
-     * @param nombre nombre de jugador
-     */
     public Jugador(int id, String nombre) {
         this.id_jugador = id;
         this.nombre = nombre;
         this.profesion = null;
         this.patrimonio = 0;
-        this.familia = new ArrayList<NPC>();
+        this.familia = new ArrayList<>();
         this.posicion = 0;
-    }
-
-    //constructor sin id
-    public Jugador(String nombre) {
-        this.nombre = nombre;
-        this.patrimonio = 0;
-        this.posicion = 0;//Aca cambio a cero porque la tabla esta seteada para aceptar valore>=0
         this.estado_civil = 0;
         this.hijos = 0;
         this.deuda = 0;
-
     }
 
-    /**
-     * Mueve al jugador a una nueva posición en el tablero.
-     *
-     * @param posicionSiguiente la posición destino del jugador.
-     */
+    public Jugador(String nombre) {
+        this(0, nombre);
+    }
+
+    // ==========================
+    // MÉTODOS LÓGICOS
+    // ==========================
+
     public void moverJugador(int posicionSiguiente) {
         setPosicion(posicionSiguiente);
     }
@@ -54,44 +55,140 @@ public class Jugador {
         setPatrimonio(this.patrimonio + sueldo);
     }
 
-    /**
-     * Metodo que mustra los datos del jugador
-     */
-    public void mostrarJugador(){
-        System.out.println("ID: " + getId() + " Nombre: " + getNombre() + " Patrimoio: " + getPatrimonio() );
+    public void mostrarJugador() {
+        System.out.println("ID: " + getId() + " | Nombre: " + getNombre() + " | Patrimonio: " + getPatrimonio());
     }
 
-    public void mostrarPatrimonioJugador(){
-        System.out.println(" Nombre: " + getNombre() + " Patrimoio: " + getPatrimonio() );
+    public void mostrarPatrimonioJugador() {
+        System.out.println("Nombre: " + getNombre() + " | Patrimonio: " + getPatrimonio());
     }
 
-    /**
-     * Getters y Setters
-     */
-    public int getId() {return id_jugador;}
-    public void setId(int id) {this.id_jugador = id;}
+    // ==========================
+    // GETTERS Y SETTERS
+    // ==========================
 
-    public String getNombre() {return nombre;}
-    public void setNombre(String nombre) {this.nombre = nombre;}
+    public int getId() { return id_jugador; }
+    public void setId(int id) { this.id_jugador = id; }
 
-    public Profesion getProfesion() {return profesion;}
-    public void setProfesion(Profesion profesion) {this.profesion = profesion;}
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
 
-    public int getPatrimonio() {return patrimonio;}
-    public void setPatrimonio(int patrimonio) {this.patrimonio = patrimonio;}
+    public Profesion getProfesion() { return profesion; }
+    public void setProfesion(Profesion profesion) { this.profesion = profesion; }
 
-    public ArrayList<NPC> getFamilia() {return familia;}
-    public void setFamilia(ArrayList<NPC> familia) {this.familia = familia;}
+    public int getPatrimonio() { return patrimonio; }
+    public void setPatrimonio(int patrimonio) { this.patrimonio = patrimonio; }
 
-    public int getPosicion() {return posicion;}
-    public void setPosicion(int posicion) {this.posicion = posicion;}
+    public ArrayList<NPC> getFamilia() { return familia; }
+    public void setFamilia(ArrayList<NPC> familia) { this.familia = familia; }
 
-    public int getEstado_civil() { return estado_civil;}
-    public void setEstado_civil(int estado_civil) {this.estado_civil = estado_civil;}
+    public int getPosicion() { return posicion; }
+    public void setPosicion(int posicion) { this.posicion = posicion; }
 
-    public int getHijos() {return hijos;}
-    public void setHijos(int hijos) {this.hijos = hijos;}
+    public int getEstado_civil() { return estado_civil; }
+    public void setEstado_civil(int estado_civil) { this.estado_civil = estado_civil; }
 
-    public int getDeuda() {return deuda;}
-    public void setDeuda(int deuda) {this.deuda = deuda;}
+    public int getHijos() { return hijos; }
+    public void setHijos(int hijos) { this.hijos = hijos; }
+
+    public int getDeuda() { return deuda; }
+    public void setDeuda(int deuda) { this.deuda = deuda; }
+
+    // ==========================
+    // MÉTODOS DE BASE DE DATOS
+    // ==========================
+
+    /** Inserta el jugador actual en la BD */
+    public void insertar() {
+        String sqlInsertar = "INSERT INTO jugador (nombre, patrimonio, posicion, estado_civil, hijos, deudas) "
+                + "VALUES (?, ?, ?, ?, ?, ?)";
+
+        try (Connection conn = new ConexionBD(url_dinamica).getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sqlInsertar)) {
+
+            stmt.setString(1, nombre);
+            stmt.setInt(2, patrimonio);
+            stmt.setInt(3, posicion);
+            stmt.setInt(4, estado_civil);
+            stmt.setInt(5, hijos);
+            stmt.setInt(6, deuda);
+            stmt.executeUpdate();
+            System.out.println("Jugador insertado correctamente: " + nombre);
+
+        } catch (SQLException e) {
+            System.err.println("Error al insertar jugador: " + e.getMessage());
+        }
+    }
+
+    /** Actualiza campos tipo String */
+    public boolean actualizar(String campo, String nuevoValor) {
+        String sql;
+        switch (campo) {
+            case "nombre":
+                sql = "UPDATE jugador SET nombre=? WHERE id_jugador=?";
+                break;
+            case "profesion":
+                sql = "UPDATE jugador SET profesion=? WHERE id_jugador=?";
+                break;
+            default:
+                System.err.println("Campo no válido para tipo String: " + campo);
+                return false;
+        }
+
+        try (Connection conn = new ConexionBD(url_dinamica).getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, nuevoValor);
+            stmt.setInt(2, id_jugador);
+            int filas = stmt.executeUpdate();
+            if (filas > 0) this.nombre = nuevoValor;
+            return filas > 0;
+
+        } catch (SQLException e) {
+            System.err.println("Error al actualizar jugador: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /** Actualiza campos tipo int */
+    public boolean actualizar(String campo, int nuevoValor) {
+        String sql;
+        switch (campo) {
+            case "patrimonio": sql = "UPDATE jugador SET patrimonio=? WHERE id_jugador=?"; break;
+            case "estado_civil": sql = "UPDATE jugador SET estado_civil=? WHERE id_jugador=?"; break;
+            case "hijos": sql = "UPDATE jugador SET hijos=? WHERE id_jugador=?"; break;
+            case "posicion": sql = "UPDATE jugador SET posicion=? WHERE id_jugador=?"; break;
+            case "deudas": sql = "UPDATE jugador SET deudas=? WHERE id_jugador=?"; break;
+            default:
+                System.err.println("Campo no válido para tipo int: " + campo);
+                return false;
+        }
+
+        try (Connection conn = new ConexionBD(url_dinamica).getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, nuevoValor);
+            stmt.setInt(2, id_jugador);
+            int filas = stmt.executeUpdate();
+
+            if (filas > 0) {
+                switch (campo) {
+                    case "patrimonio" -> this.patrimonio = nuevoValor;
+                    case "estado_civil" -> this.estado_civil = nuevoValor;
+                    case "hijos" -> this.hijos = nuevoValor;
+                    case "posicion" -> this.posicion = nuevoValor;
+                    case "deudas" -> this.deuda = nuevoValor;
+                }
+            }
+            return filas > 0;
+
+        } catch (SQLException e) {
+            System.err.println("Error al actualizar jugador: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /** Busca un jugador por id en la BD y actualiza el objeto actual */
+
+
 }
