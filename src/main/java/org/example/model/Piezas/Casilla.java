@@ -16,6 +16,8 @@ public class Casilla {
         this.color = color;
     }
 
+    public Casilla() {}
+
     public void mostrarCasilla() {
         String colorTexto;
 

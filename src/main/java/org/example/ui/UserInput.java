@@ -4,14 +4,11 @@ import java.util.Scanner;
 
 public class UserInput {
 
-    private Scanner scanner;
-
-    public UserInput() {
-        scanner = new Scanner(System.in);
-    }
+    // Scanner "global" para toda la aplicación
+    private static final Scanner scanner = new Scanner(System.in);
 
     // Leer un entero dentro de un rango
-    public int getInt(String prompt, int min, int max) {
+    public static int getInt(String prompt, int min, int max) {
         int value;
         while (true) {
             System.out.print(prompt);
@@ -31,7 +28,7 @@ public class UserInput {
     }
 
     // Leer un texto que cumpla longitud mínima y máxima
-    public String getString(String prompt, int minLength, int maxLength) {
+    public static String getString(String prompt, int minLength, int maxLength) {
         String input;
         while (true) {
             System.out.print(prompt);
@@ -44,8 +41,30 @@ public class UserInput {
         }
     }
 
+    public static boolean getBolean(String prompt) {
+        int value;
+        while (true) {
+            System.out.println(prompt);
+            if (scanner.hasNextInt()) {
+                value = scanner.nextInt();
+                scanner.nextLine(); // limpiar buffer
+                if (value == 1) {
+                    return true;
+                } else if  (value == 2) {
+                    return false;
+                } else {
+                    System.out.println("⚠️ Error: el número debe estar entre " + 1 + " y " + 2);
+                }
+            } else {
+                System.out.println("⚠️ Error: ingrese un número entero válido");
+                scanner.nextLine(); // limpiar buffer
+            }
+        }
+
+    }
+
     // Cerrar scanner
-    public void close() {
+    public static void close() {
         scanner.close();
     }
 }

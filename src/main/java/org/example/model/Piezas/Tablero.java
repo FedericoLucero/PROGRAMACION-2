@@ -1,6 +1,7 @@
 package org.example.model.Piezas;
 
-import org.example.model.Jugadores.Jugador;
+import static org.example.utils.ConsolaColor.*;
+
 import org.example.utils.*;
 import java.util.ArrayList;
 
@@ -9,9 +10,9 @@ public class Tablero {
 
     private ArrayList<Casilla> casillas = new ArrayList<>();
 
-    /**
+    /*
      * Muestra el tablero en columna con colores según el tipo de casilla usando ConsolaColor.
-     */
+
     public void mostrarTablero() {
         System.out.println("\n=== TABLERO ===\n");
 
@@ -23,21 +24,27 @@ public class Tablero {
         System.out.println("\n================\n");
     }
 
-    /**
-     * Devuelve el color correspondiente según la casilla usando ConsolaColor.
      */
+
+    /*
+     * Devuelve el color correspondiente según la casilla usando ConsolaColor.
+
     private String getColorConsola(String color) {
         return switch (color.toLowerCase()) {
-            case "amarilla" -> ConsolaColor.AMARILLO;
-            case "azul"     -> ConsolaColor.AZUL;
-            case "roja"     -> ConsolaColor.ROJO;
-            case "verde"    -> ConsolaColor.VERDE;
-            case "rosa"     -> ConsolaColor.ROSA;
-            case "stop"     -> ConsolaColor.GRIS;
-            default         -> ConsolaColor.RESET;
+            case "amarilla" -> AMARILLO;
+            case "azul"     -> AZUL;
+            case "roja"     -> ROJO;
+            case "verde"    -> VERDE;
+            case "rosa"     -> ROSA;
+            case "stop"     -> GRIS;
+            default         -> RESET;
         };
     }
 
+
+     */
+
+    /*
 
     //Metodo para ver casillas intermedias entre posicion inicial y final, segun casillas hacer
     public void accion(Jugador jugador, int posicionInicial, int posicionFinal){
@@ -58,6 +65,8 @@ public class Tablero {
         }
         System.out.println("amarillas: " + contadorAmarillo + " verdes: " + contadorVerde);
     }
+
+     */
 
     /**
      * Getters y Setters

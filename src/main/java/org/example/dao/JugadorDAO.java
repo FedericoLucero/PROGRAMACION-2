@@ -8,7 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class JugadorDAO {
-    private final String url_dinamica ="jdbc:sqlite:/home/bianca/IdeaProjects/PROGRAMACION-2/BDIntegrador.sqlite";
+    private final String url_dinamica ="jdbc:sqlite:BDIntegrador.sqlite";
 
     /* crear jugador
        leer jugador
