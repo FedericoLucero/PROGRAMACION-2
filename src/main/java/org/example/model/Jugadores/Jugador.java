@@ -1,6 +1,7 @@
 package org.example.model.Jugadores;
 
 import org.example.bd.ConexionBD;
+import org.example.model.Bienes.Casa;
 import org.example.model.NPCs.NPC;
 
 import java.sql.Connection;
@@ -15,14 +16,20 @@ public class Jugador {
     private int id_jugador;
     private String nombre;
     private Profesion profesion;
+
     private int patrimonio;
     private ArrayList<NPC> familia;
+    private ArrayList<Casa> casas;
+
     private int posicion;
     private int estado_civil; // 0/1 porque sqlite no tiene booleano
     private int hijos;
     private int deuda;
 
+
+
     private static final String url_dinamica ="jdbc:sqlite:BD_LIFE_DINAMIC.sqlite";
+
     // ==========================
     // CONSTRUCTORES
     // ==========================
@@ -31,8 +38,11 @@ public class Jugador {
         this.id_jugador = id;
         this.nombre = nombre;
         this.profesion = null;
+
         this.patrimonio = 0;
         this.familia = new ArrayList<>();
+        this.casas = new ArrayList<>();
+
         this.posicion = 0;
         this.estado_civil = 0;
         this.hijos = 0;
@@ -55,13 +65,14 @@ public class Jugador {
         setPatrimonio(this.patrimonio + sueldo);
     }
 
-    public void mostrarJugador() {
-        System.out.println("ID: " + getId() + " | Nombre: " + getNombre() + " | Patrimonio: " + getPatrimonio());
+    public int getCantidadFamiliares(){
+        return familia.size();
     }
 
-    public void mostrarPatrimonioJugador() {
-        System.out.println("Nombre: " + getNombre() + " | Patrimonio: " + getPatrimonio());
+    public int getCantidadCasas(){
+        return casas.size();
     }
+
 
     // ==========================
     // GETTERS Y SETTERS
