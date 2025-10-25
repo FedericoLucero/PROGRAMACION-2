@@ -1,7 +1,6 @@
 package org.example.model.Jugadores;
 
 import org.example.model.NPCs.NPC;
-import org.example.ui.UserInput;
 
 import java.util.ArrayList;
 

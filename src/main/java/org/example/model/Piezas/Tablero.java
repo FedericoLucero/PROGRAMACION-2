@@ -2,13 +2,24 @@ package org.example.model.Piezas;
 
 import static org.example.utils.ConsolaColor.*;
 
+import org.example.GUI.VentanaJuego;
+import org.example.dao.TableroDAO;
 import org.example.utils.*;
 import java.util.ArrayList;
+import org.example.dao.*;
 
 
 public class Tablero {
 
     private ArrayList<Casilla> casillas = new ArrayList<>();
+    private TableroDAO tableroDAO = new TableroDAO();
+    private VentanaJuego ventanaJuego = new VentanaJuego();
+
+    public void mostrarTablero(){
+        tableroDAO.mostrarTablero();
+    }
+
+
 
     /*
      * Muestra el tablero en columna con colores según el tipo de casilla usando ConsolaColor.

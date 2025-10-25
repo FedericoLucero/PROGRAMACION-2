@@ -6,7 +6,7 @@ import org.example.GUI.VentanaJuego;
 import org.example.dao.TableroDAO;
 import org.example.model.Jugadores.*;
 import org.example.utils.ConsolaColor;
-import org.example.ui.UserInput;
+import org.example.utils.UserInput;
 
 public class Juego {
 
@@ -70,7 +70,7 @@ public class Juego {
 
                         break;
 
-                    case "azul":
+                    case "azul": // bian
                         System.out.println(AZUL + "Caiste en una casilla azul: Posición: " + posicion + ConsolaColor.RESET);
                         // todo accion de elegir entre dos profesiones de un mismo nivel (podria ser que primero te de nivel 1, luego nievl 2... creciendo)
 
@@ -82,14 +82,14 @@ public class Juego {
 
                         break;
 
-                    case "verde":
+                    case "verde": // bian
                         System.out.println(VERDE + "Caiste en una casilla verde: Posición: " + posicion + RESET);
                         // todo acción de cobrar bono
                         // todo ya se cobro el sueldo normal cada vez que se paso por "arriba" de una casilla verde
 
                         break;
 
-                    case "rosa":
+                    case "rosa": // bian
                         System.out.println(ROSA + "Caiste en una casilla rosa: Posición: " + posicion + RESET);
                         // todo acción de que te toque familia
                         // todo falta crear casillas rosas en la bd

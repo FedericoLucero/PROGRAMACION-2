@@ -2,7 +2,7 @@ package org.example;
 
 import org.example.dao.JugadorDAO;
 import org.example.model.Jugadores.Jugador;
-import org.example.ui.UserInput;
+import org.example.utils.UserInput;
 
 public class MainTest2 {
 
