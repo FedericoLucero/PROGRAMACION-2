@@ -8,16 +8,11 @@ public class MainTest2 {
 
     public static void main(String[] args) {
 
-        //test jugador dao
-        //para usarlo se instancia Jugador y luego se llama al metodo de la clase JugadorDAO para agregarlo
-        //Insatancio UI para validacion
+      //Test clase jugador
 
-        UserInput ui = new UserInput();
-        String nombre = ui.getString("Ingrese el nombre del jugador", 3, 10);
-        Jugador j1 = new Jugador(nombre);
-        JugadorDAO jdao = new JugadorDAO();
+        Jugador j1 = new Jugador("Bianca");
 
-        jdao.actualizar("posicion", 2, "jug3");
-        jdao.actualizar("profesion", "soldador", "jug3");
+
     }
+
 }
