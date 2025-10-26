@@ -8,13 +8,10 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-
-import java.sql.*;
-
 public class Jugador {
     private int id_jugador;
     private String nombre;
-    private Profesion profesion;
+    private int profesion;
     private int patrimonio;
     private ArrayList<NPC> familia;
     private int posicion;
@@ -30,7 +27,7 @@ public class Jugador {
     public Jugador(int id, String nombre) {
         this.id_jugador = id;
         this.nombre = nombre;
-        this.profesion = null;
+        this.profesion = 0;
         this.patrimonio = 0;
         this.familia = new ArrayList<>();
         this.posicion = 0;
@@ -73,8 +70,8 @@ public class Jugador {
     public String getNombre() { return nombre; }
     public void setNombre(String nombre) { this.nombre = nombre; }
 
-    public Profesion getProfesion() { return profesion; }
-    public void setProfesion(Profesion profesion) { this.profesion = profesion; }
+    public int getProfesion() { return profesion; }
+    public void setProfesion(int profesion) { this.profesion = profesion; }
 
     public int getPatrimonio() { return patrimonio; }
     public void setPatrimonio(int patrimonio) { this.patrimonio = patrimonio; }

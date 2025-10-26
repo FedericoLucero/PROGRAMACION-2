@@ -16,6 +16,7 @@ public class CartaNaranja {
     private int precio_venta;
     private int nivel;
     final static String url_dinamica = "jdbc:sqlite:BD_LIFE_DINAMIC.sqlite";
+    final static String url_estatica = "jdbc:sqlite:BD_LIFE_STATIC.sqlite";
     // ==========================
     // GETTERS Y SETTERS
     // ==========================
@@ -64,6 +65,38 @@ public class CartaNaranja {
         }
         return ids;
     }
+    /*
+    BuscarCartaId(id_casa): Busca en la bd la casa con el id del argumento y crea un objeto de tipo CartaNaranja(casa)
+    del que pueden consultarse propiedades usando getters y setters
+     */
+   public static CartaNaranja buscarCartaId(int id_casa){
+
+       String sql = "SELECT * FROM CartaNaranja WHERE id = ?";
+       CartaNaranja carta = null;
+
+       try (Connection conn = new ConexionBD(CartaNaranja.url_estatica).getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+           stmt.setInt(1, id_casa);
+           ResultSet rs = stmt.executeQuery();
+
+           if (rs.next()) {
+               carta = new CartaNaranja();
+               carta.setId(rs.getInt("id"));
+               carta.setDescripcion(rs.getString("descripcion"));
+               carta.setPrecio_compra(rs.getInt("precio_compra"));
+               carta.setPrecio_venta(rs.getInt("precio_venta"));
+               carta.setNivel(rs.getInt("nivel"));
+           }
+
+       } catch (Exception e) {
+           System.out.println("Error al buscar carta naranja: " + e.getMessage());
+       }
+
+       return carta;
+
+
+   }
 
 
 }
