@@ -44,7 +44,7 @@ public class Jugador {
     }
 
     // ==========================
-    // MÉTODOS LÓGICOS
+    // METODOS PROPIOS
     // ==========================
 
     public void moverJugador(int posicionSiguiente) {
@@ -95,7 +95,7 @@ public class Jugador {
     public void setDeuda(int deuda) { this.deuda = deuda; }
 
     // ==========================
-    // MÉTODOS DE BASE DE DATOS
+    // METODOS DE BD
     // ==========================
 
     /** Inserta el jugador actual en la BD */
