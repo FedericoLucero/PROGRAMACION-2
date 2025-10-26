@@ -56,5 +56,36 @@ public class CartaAzul {
         }
         return ids;
     }
+    /*
+    BuscarCartaId(id_casa): Busca en la bd la casa con el id del argumento y crea un objeto de tipo CartaAzul(profesion)
+    del que pueden consultarse propiedades usando getters y setters
+     */
+    public static CartaAzul buscarCartaId(int id_profesion){
+
+        String sql = "SELECT * FROM CartaAzul WHERE id = ?";
+        CartaAzul carta = null;
+
+        try (Connection conn = new ConexionBD(CartaNaranja.url_estatica).getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id_profesion);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                carta = new CartaAzul();
+                carta.setId(rs.getInt("id"));
+                carta.setTitulo(rs.getString("titulo"));
+                carta.setSueldo(rs.getInt("sueldo"));
+                carta.setNivel(rs.getInt("nivel"));
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error al buscar carta azul: " + e.getMessage());
+        }
+
+        return carta;
+
+
+    }
 
 }

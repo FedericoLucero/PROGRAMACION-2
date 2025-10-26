@@ -43,9 +43,9 @@ public class TableroDAO extends DAO {
                             + ConsolaColor.RESET);
 
                     // Efecto verde
-                    if (color.equalsIgnoreCase("verde") && jugador.getProfesion() != null) {
-                        jugador.actualizarPatrimonio(jugador.getProfesion().getSueldo());
-                    }
+//                    if (color.equalsIgnoreCase("verde") && jugador.getProfesion() != null) {
+//                        jugador.actualizarPatrimonio(jugador.getProfesion().getSueldo());
+//                    }
 
                     // Casilla stop
                     if (color.equalsIgnoreCase("stop")) {

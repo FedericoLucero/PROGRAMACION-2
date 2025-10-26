@@ -111,8 +111,8 @@ public class Juego {
                         // todo por ejemplo casilla 11 simpre te hace girar la ruleta con solo dos opciones (cobrar/pagar)
 
                         if (posicion==5){
-                            jugadorTurno.setProfesion(new Profesion("ingeEjemplo",100)); //profesion de prueba
-                            jugadorTurno.getProfesion().mostrarProfesion();
+//                            jugadorTurno.setProfesion(new Profesion("ingeEjemplo",100)); //profesion de prueba
+//                            jugadorTurno.getProfesion().mostrarProfesion();
                         }
 
                         break;
