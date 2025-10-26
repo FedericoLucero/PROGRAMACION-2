@@ -8,7 +8,6 @@ import org.example.GUI.VentanaJuego;
 import org.example.model.Jugadores.*;
 import org.example.model.Piezas.Casilla;
 import org.example.model.Piezas.Tablero;
-import org.example.utils.ConsolaColor;
 import org.example.utils.PantallaColor;
 import org.example.utils.UserInput;
 
