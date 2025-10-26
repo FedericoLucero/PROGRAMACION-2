@@ -10,6 +10,8 @@ public class MainTest2 {
 
     public static void main(String[] args) {
 
+        Jugador j1 = Jugador.buscarJugadorPorId(1);
+        System.out.println(j1.getProfesion().getTitulo());
         //Test buscar cartaNaranja
         CartaNaranja cartaN1 = CartaNaranja.buscarCartaId(5);
         System.out.println(cartaN1.getDescripcion());
