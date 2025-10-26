@@ -22,7 +22,7 @@ public class VentanaJuego extends JFrame {
     public VentanaJuego() {
         setTitle("Juego Life - Ventana Principal");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1000, 700);
+        setSize(2000, 700);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(10, 10));
 
