@@ -33,7 +33,7 @@ public class VentanaJuego extends JFrame {
     public VentanaJuego(Jugador[] nombresJugadores) {
         setTitle("Juego Life - Ventana Principal");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1100, 750);
+        setSize(1200, 750);
         setLocationRelativeTo(null);
 
         cargarImagenes();
@@ -65,7 +65,7 @@ public class VentanaJuego extends JFrame {
             java.net.URL tableroURL = getClass().getResource("/imagenes/tablero.jpg");
             if (tableroURL != null) {
                 iconTablero = new ImageIcon(new ImageIcon(tableroURL)
-                        .getImage().getScaledInstance(600, 600, Image.SCALE_SMOOTH));
+                        .getImage().getScaledInstance(750, 600, Image.SCALE_SMOOTH));
             } else System.err.println("No se encontró la imagen del tablero");
 
         } catch (Exception e) {
@@ -300,6 +300,16 @@ public class VentanaJuego extends JFrame {
             jugadores[i] = new Jugador(i, nombre);
         }
         return jugadores;
+    }
+
+    public boolean jugarDeNuevo() {
+        int respuesta = JOptionPane.showConfirmDialog(
+                null,
+                "¿DESEA JUGAR DE NUEVO?",
+                "Continuar",
+                JOptionPane.YES_NO_OPTION
+        );
+        return respuesta == JOptionPane.YES_OPTION;
     }
 
     // --- Main para probar ---
