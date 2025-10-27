@@ -50,11 +50,17 @@ public class Jugador {
         this.deuda = 0;
     }
 
+    public  Jugador(){};
+
     public Jugador(String nombre) {
         this(0, nombre);
     }
 
-    public  Jugador(){};
+    public Jugador(int id_jugador, String nombre, int patrimonio) {
+        this.id_jugador = id_jugador;
+        this.nombre = nombre;
+        this.patrimonio = patrimonio;
+    }
 
     // ==========================
     // METODOS PROPIOS
@@ -69,11 +75,17 @@ public class Jugador {
     }
 
     public int getCantidadFamiliares(){
-        return familia.size();
+        if (familia != null) {
+            return familia.size();
+        }
+        return 0;
     }
 
     public int getCantidadCasas(){
-        return casas.size();
+        if (casas != null) {
+            return casas.size();
+        }
+        return 0;
     }
 
 

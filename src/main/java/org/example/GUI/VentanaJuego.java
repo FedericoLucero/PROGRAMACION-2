@@ -1,6 +1,7 @@
 package org.example.GUI;
 
 import org.example.model.Jugadores.Jugador;
+import org.example.GUI.InputsPaneles.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -88,7 +89,7 @@ public class VentanaJuego extends JFrame {
     private JPanel construirPanelDerecho(Jugador[] nombresJugadores) {
         // Panel derecho con FlowLayout centrado
         JPanel panelDerecho = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 10));
-        panelDerecho.setPreferredSize(new Dimension(300, 0));
+        panelDerecho.setPreferredSize(new Dimension(320, 0));
 
         // Panel vertical donde se añaden subpaneles
         JPanel panelVertical = new JPanel();
@@ -102,7 +103,7 @@ public class VentanaJuego extends JFrame {
         panelInfoJugadores.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         panelesJugadores = new JPanel[nombresJugadores.length];
-        labelsJugadores = new JLabel[nombresJugadores.length][4]; // 0=pos, 1=dólares, 2=casas, 3=familia
+        labelsJugadores = new JLabel[nombresJugadores.length][5]; // 0=pos, 1=dólares, 2=casas, 3=familia, 4=profesión
 
         for (int i = 0; i < nombresJugadores.length; i++) {
             Jugador jugador = nombresJugadores[i];
@@ -136,6 +137,12 @@ public class VentanaJuego extends JFrame {
             lblFamilia.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 14));
             labelsJugadores[i][3] = lblFamilia;
             panelJugador.add(lblFamilia);
+            panelJugador.add(Box.createRigidArea(new Dimension(5,0)));
+
+            JLabel lblProfesion = new JLabel("🎓: [Ninguna]");
+            lblProfesion.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 14));
+            labelsJugadores[i][4] = lblProfesion;
+            panelJugador.add(lblProfesion);
 
             panelInfoJugadores.add(panelJugador);
             panelInfoJugadores.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -265,68 +272,8 @@ public class VentanaJuego extends JFrame {
         labelsJugadores[indice][3].setText("👨‍👩‍👦: [" + String.format("%02d", familia) + "]");
     }
 
-    // --- Pedir cantidad y nombres ---
-    public static int pedirCantidadJugadores() {
-        int cantidad = 0;
-        boolean valido = false;
-        while (!valido) {
-            String input = JOptionPane.showInputDialog(null,
-                    "Ingrese la cantidad de jugadores (1-4):",
-                    "Configuración de juego", JOptionPane.QUESTION_MESSAGE);
-            if (input == null) System.exit(0);
-            try {
-                cantidad = Integer.parseInt(input);
-                if (cantidad >= 1 && cantidad <= 4) valido = true;
-                else JOptionPane.showMessageDialog(null, "Debe ser un número entre 1 y 4.");
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(null, "Ingrese un número válido.");
-            }
-        }
-        return cantidad;
-    }
-
-    public static Jugador[] pedirNombresJugadores(int cantidad) {
-        Jugador[] jugadores = new Jugador[cantidad];
-        for (int i = 0; i < cantidad; i++) {
-            String nombre;
-            do {
-                nombre = JOptionPane.showInputDialog(null,
-                        "Ingrese el nombre del jugador " + (i + 1) + ":",
-                        "Nombre de jugador", JOptionPane.QUESTION_MESSAGE);
-                if (nombre == null) System.exit(0);
-                nombre = nombre.trim();
-            } while (nombre.isEmpty());
-
-            jugadores[i] = new Jugador(i, nombre);
-        }
-        return jugadores;
-    }
-
-    public boolean jugarDeNuevo() {
-        int respuesta = JOptionPane.showConfirmDialog(
-                null,
-                "¿DESEA JUGAR DE NUEVO?",
-                "Continuar",
-                JOptionPane.YES_NO_OPTION
-        );
-        return respuesta == JOptionPane.YES_OPTION;
-    }
-
-    // --- Main para probar ---
-    public static void main(String[] args) {
-        int cantidad = VentanaJuego.pedirCantidadJugadores();
-        Jugador[] jugadores = VentanaJuego.pedirNombresJugadores(cantidad);
-        VentanaJuego ventana = new VentanaJuego(jugadores);
-
-        new Thread(() -> {
-            try {
-                Thread.sleep(2000);
-                ventana.actualizarValoresJugador(0, 5, 1200, 2, 1);
-                if (cantidad > 1) ventana.actualizarValoresJugador(1, 3, 1500, 1, 2);
-                Thread.sleep(2000);
-                ventana.actualizarValoresJugador(0, 6, 1300, 3, 2);
-                if (cantidad > 1) ventana.actualizarValoresJugador(1, 4, 1800, 2, 3);
-            } catch (InterruptedException e) { e.printStackTrace(); }
-        }).start();
+    public void actualizarProfesionJugador(int indice, String profesion) {
+        if (indice < 0 || indice >= labelsJugadores.length) return;
+        labelsJugadores[indice][4].setText("🎓: [" + profesion + "]");
     }
 }

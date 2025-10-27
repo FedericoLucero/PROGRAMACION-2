@@ -63,7 +63,7 @@ public class Tablero {
                     }
 
                     // Casilla stop
-                    if (color.equalsIgnoreCase("stop")) {
+                    if (color.equalsIgnoreCase("stopAzul") ||color.equalsIgnoreCase("stopRosa") ||color.equalsIgnoreCase("stopNaranja")) {
                         return idCasillaActual;
                     }
                 }
