@@ -1,6 +1,5 @@
 package org.example;
 
-import org.example.dao.JugadorDAO;
 import org.example.model.Jugadores.Jugador;
 import org.example.model.Piezas.Cartas.CartaAzul;
 import org.example.model.Piezas.Cartas.CartaNaranja;
