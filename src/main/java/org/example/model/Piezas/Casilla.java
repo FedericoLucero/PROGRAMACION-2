@@ -1,6 +1,10 @@
 package org.example.model.Piezas;
 
+import org.example.bd.ConexionBD;
+import org.example.model.Piezas.Cartas.CartaRoja;
+
 import java.sql.*;
+import java.util.Random;
 
 public class Casilla {
     private int id;
@@ -23,6 +27,7 @@ public class Casilla {
     /**
      * Obtiene una casilla específica desde la base de datos según su identificador único.
      * Este métod0 ejecuta una consulta SQL para recuperar los datos de una casilla cuyo id_casilla coincida con el valor recibido como parámetro
+     *
      * @param idCasilla el identificador único de la casilla que se desea obtener.
      * @return un objeto Casilla con los datos correspondientes si existe o null si no se encuentra o si ocurre un error durante la consulta.
      */
@@ -36,7 +41,7 @@ public class Casilla {
             if (rs.next()) {
 
                 // retrona el color
-                return  rs.getString("color");
+                return rs.getString("color");
             }
 
         } catch (SQLException e) {
@@ -53,6 +58,7 @@ public class Casilla {
     public int getId() {
         return id;
     }
+
     public void setId(int id) {
         this.id = id;
     }
@@ -60,7 +66,9 @@ public class Casilla {
     public String getColor() {
         return color;
     }
+
     public void setColor(String color) {
         this.color = color;
     }
+
 }

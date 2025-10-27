@@ -8,6 +8,7 @@ import org.example.bd.ConexionBD;
 import org.example.model.Jugadores.*;
 import org.example.model.Piezas.Cartas.CartaAzul;
 import org.example.model.Piezas.Cartas.CartaNaranja;
+import org.example.model.Piezas.Cartas.CartaRoja;
 import org.example.model.Piezas.Casilla;
 import org.example.model.Piezas.Tablero;
 import org.example.utils.PantallaColor;
@@ -60,7 +61,6 @@ public class Juego {
 
                 // metodo que calcula la siguiente posicion (teniendo en cuenta stops y fin del tablero)
                 int siguientePosicion = tablero.recorrerHastaSiguientePosicion(jugadorTurno,girarRuleta());
-
                 // verificamos que la posicion sea menor que el final
                 if (siguientePosicion < tablero.getCantCasillas()){
 
@@ -88,7 +88,7 @@ public class Juego {
                         case "roja":
 
                             ventanaJuego.setDescripcion("Caiste en una casilla ROJA"," Posición: "+ siguientePosicion, PantallaColor.ROJO);
-                            accionRoja();
+                            accionRoja(jugadorTurno);
                             break;
 
                         case "verde":
@@ -215,7 +215,7 @@ public class Juego {
                 break;
             case 2:
                 // accion roja
-                accionRoja();
+                accionRoja(jugadorTurno);
                 break;
             case 3:
                 //accion verde
@@ -238,36 +238,45 @@ public class Juego {
      * y actualiza la profesión del jugador según su seleccion.
      */
     public void accionAzul(Jugador jugadorTurno, int nivel) {
-
-        // Crear la carta y obtener las dos profesiones aleatorias
         CartaAzul profesion = new CartaAzul();
         List<Integer> ids = profesion.obtenerRandom(nivel);
 
-        // Buscar las dos cartas por ID
         CartaAzul profesion1 = CartaAzul.buscarCartaId(ids.get(0));
         CartaAzul profesion2 = CartaAzul.buscarCartaId(ids.get(1));
 
-        // Crear las descripciones para mostrar en la ventana
-        String[] desc1 = { "Profesión: " + profesion1.getTitulo(), "Salario: " + profesion1.getSueldo(), "Nivel: " + profesion1.getNivel()};
-        String[] desc2 = {"Profesión: " + profesion2.getTitulo(), "Salario: " + profesion2.getSueldo(), "Nivel: " + profesion2.getNivel()};
+        String[] desc1 = { "Profesión: " + profesion1.getTitulo(),
+                "Salario: " + profesion1.getSueldo(),
+                "Nivel: " + profesion1.getNivel()};
+        String[] desc2 = {"Profesión: " + profesion2.getTitulo(),
+                "Salario: " + profesion2.getSueldo(),
+                "Nivel: " + profesion2.getNivel()};
 
-        // Mostrar la ventana de elección
         VentanaCartaAzul ventana = new VentanaCartaAzul(desc1, desc2);
         int seleccion = ventana.mostrarYEsperarSeleccion();
 
         if (seleccion == 1){
-            jugadorTurno.actualizar("id_profesion",ids.get(0).intValue());
+            jugadorTurno.actualizar("id_profesion", ids.get(0).intValue());
+            // ↑ Ya no necesitas setProfesion(), se actualiza automáticamente
             ventanaJuego.actualizarProfesionJugador(jugadorTurno.getId(), profesion1.getTitulo());
         }
         if (seleccion == 2){
-            jugadorTurno.actualizar("id_profesion",ids.get(1).intValue());
+            jugadorTurno.actualizar("id_profesion", ids.get(1).intValue());
             ventanaJuego.actualizarProfesionJugador(jugadorTurno.getId(), profesion2.getTitulo());
         }
     }
 
-    public void accionRoja(){
-        VentanaCartaRoja.llamarVentanaRoja();
-        // todo acción de pagar impuesto
+    public void accionRoja(Jugador jugadorTurno){
+
+        // Llamo una arta aleatoria de deuda, traigo el valor de patrimonio actual lo resto y luego actualizo
+        CartaRoja cartaRoja = CartaRoja.cartaRojaRandom();
+        int deuda = cartaRoja.getValor();
+        int patrimonio = jugadorTurno.getPatrimonio();
+        int pago = patrimonio + deuda; //Sumo porque los valores enn tabla ya son negativos
+
+        System.out.println("deuda "+deuda);
+        jugadorTurno.actualizar("patrimonio",pago);
+
+
     }
 
     public void accionVerde(Jugador jugadorTurno){
@@ -329,7 +338,7 @@ public class Juego {
     }
 
     private void borrarDatosBDDinamica() {
-        String sql = "DELETE FROM jugador, sqlite_sequence";
+        String sql = "DELETE FROM jugador";
 
         try (Connection conn = new ConexionBD(ConexionBD.url_dinamica).getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -341,6 +350,7 @@ public class Juego {
             System.err.println("Error al limpiar la base de datos dinámica: " + e.getMessage());
         }
     }
+
 
     // ==========================
     // GETTERS Y SETTERS

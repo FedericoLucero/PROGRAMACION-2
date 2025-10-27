@@ -38,6 +38,7 @@ public class Tablero {
         int posicionAnterior = jugador.getPosicion();
         int idCasillaActual = posicionAnterior;
 
+
         String query = "SELECT id_casilla, color FROM Casillas WHERE id_casilla > ? ORDER BY id_casilla LIMIT ?";
 
         try (Connection conn = DriverManager.getConnection(url_static);
@@ -58,8 +59,15 @@ public class Tablero {
                             + ConsolaColor.RESET);
 
                     // Efecto verde
-                    if (color.equalsIgnoreCase("verde") && jugador.getProfesion() != null) {
-                        jugador.actualizarPatrimonio(jugador.getProfesion().getSueldo());
+                    if (color.equalsIgnoreCase("verde")) {
+                        if (jugador.getProfesion() != null) {
+                            int sueldo = jugador.getProfesion().getSueldo();
+                            int sueldo_nuevo = jugador.getPatrimonio() + sueldo;
+                            jugador.actualizar("patrimonio", sueldo_nuevo);
+                            System.out.println(jugador.getNombre() + " cobra su sueldo de $" + sueldo);
+                        } else {
+                            System.out.println(jugador.getNombre() + " no tiene profesión, no cobra sueldo.");
+                        }
                     }
 
                     // Casilla stop
@@ -161,5 +169,8 @@ public class Tablero {
             return 3;
         }
     }
+
+
+
 
 }

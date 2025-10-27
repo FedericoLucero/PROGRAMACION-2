@@ -27,27 +27,21 @@ public class MainTest2 {
 //            System.out.println(id);
 //        }
 //        System.out.println(ids.get(1));
-//        boolean jugarDeNuevo;
-//        do {    // bucle "voler a jugar"
-//
-//            // metodo que pide la cantidad de jugadores (min 1, max 4)
-//            //int cantJugadores = UserInput.getInt("Ingrese cantidad de jugadores ",1,4);
-//
-//            // objeto principal donde se realiza la partida
-//            Juego juego = new Juego();
-//
-//            // metodo donde se realiza la partida
-//            jugarDeNuevo = juego.jugar();
-//
-//        } while (jugarDeNuevo);
-//        System.out.println("=== JUEGO TERMINADO ===");
-        GirarRuleta tr = new GirarRuleta(); // crear una instancia
-       // System.out.println(tr.valor);
-        JFrame frame = new JFrame("Rotar Imagen");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 400);
-        frame.add(new GirarRuleta());
-        frame.setVisible(true);
+        boolean jugarDeNuevo;
+        do {    // bucle "voler a jugar"
+
+            // metodo que pide la cantidad de jugadores (min 1, max 4)
+            //int cantJugadores = UserInput.getInt("Ingrese cantidad de jugadores ",1,4);
+
+            // objeto principal donde se realiza la partida
+            Juego juego = new Juego();
+
+            // metodo donde se realiza la partida
+            jugarDeNuevo = juego.jugar();
+
+        } while (jugarDeNuevo);
+        System.out.println("=== JUEGO TERMINADO ===");
+
     }
 
 }
