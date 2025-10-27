@@ -1,7 +1,5 @@
 package org.example;
 
-import org.example.GUI.GirarRuleta;
-
 import javax.swing.*;
 
 public class MainTest2 {
@@ -41,6 +39,8 @@ public class MainTest2 {
 //
 //        } while (jugarDeNuevo);
 //        System.out.println("=== JUEGO TERMINADO ===");
+
+        /*
         GirarRuleta tr = new GirarRuleta(); // crear una instancia
        // System.out.println(tr.valor);
         JFrame frame = new JFrame("Rotar Imagen");
@@ -48,6 +48,8 @@ public class MainTest2 {
         frame.setSize(400, 400);
         frame.add(new GirarRuleta());
         frame.setVisible(true);
+
+         */
     }
 
 }
