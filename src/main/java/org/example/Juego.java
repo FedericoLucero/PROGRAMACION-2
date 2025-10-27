@@ -4,12 +4,18 @@ import static org.example.GUI.InputsPaneles.*;
 import static org.example.utils.ConsolaColor.*;
 
 import org.example.GUI.*;
+import org.example.bd.ConexionBD;
 import org.example.model.Jugadores.*;
 import org.example.model.Piezas.Cartas.CartaAzul;
+import org.example.model.Piezas.Cartas.CartaNaranja;
 import org.example.model.Piezas.Casilla;
 import org.example.model.Piezas.Tablero;
 import org.example.utils.PantallaColor;
 import org.example.utils.UserInput;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 
 public class Juego {
@@ -88,7 +94,7 @@ public class Juego {
                         case "verde":
 
                             ventanaJuego.setDescripcion("Caiste en una casilla VERDE"," Posición: "+ siguientePosicion, PantallaColor.VERDE);
-                            accionVerde();
+                            accionVerde(jugadorTurno);
                             break;
 
                         case "rosa":
@@ -100,7 +106,7 @@ public class Juego {
                         case "naranja":
 
                             ventanaJuego.setDescripcion("Caiste en una casilla NARANJA"," Posición: " + siguientePosicion, PantallaColor.NARANJA);
-                            accionNaranja();
+                            accionNaranja(jugadorTurno,nivel);
                             break;
 
                         // =================
@@ -123,7 +129,7 @@ public class Juego {
                         case "stopNaranja": // casilla 40
 
                             ventanaJuego.setDescripcion("Caiste en una casilla STOP NARANJA"," Posición: " + siguientePosicion, PantallaColor.BLANCO);
-                            accionNaranja();
+                            accionNaranja(jugadorTurno,nivel);
                             break;
 
                         default:
@@ -160,7 +166,8 @@ public class Juego {
 
         // cierra la ventanaJuego del juego
         ventanaJuego.dispose();
-
+        //vaciar la bd
+        borrarDatosBDDinamica();
 
         return fin;
     }
@@ -170,6 +177,9 @@ public class Juego {
         this.finJuego = cantJugadores;
         this.jugadores = pedirNombresJugadores(cantJugadores);
         this.ventanaJuego = new VentanaJuego(jugadores);
+        for (Jugador jugador : jugadores) {
+            jugador.insertar();  // aca se insertan los jugadores en la bd
+        }
     }
 
     /**
@@ -209,7 +219,7 @@ public class Juego {
                 break;
             case 3:
                 //accion verde
-                accionVerde();
+                accionVerde(jugadorTurno);
                 break;
             case 4:
                 // accion rosa
@@ -217,7 +227,7 @@ public class Juego {
                 break;
             case 5:
                 // accion naranja
-                accionNaranja();
+                accionNaranja(jugadorTurno,nivel);
                 break;
         }
     }
@@ -260,10 +270,17 @@ public class Juego {
         // todo acción de pagar impuesto
     }
 
-    public void accionVerde(){
+    public void accionVerde(Jugador jugadorTurno){
+
         VentanaCartaVerde.llamarVentanaVerde();
+        //Traigo el patrimonio actual y lo sumo al bono y luego atualizo, porque la funcion jugador.actualizar reemplaza un valor por otro
+        int patrimonioActual = jugadorTurno.getPatrimonio();
+        int bono= patrimonioActual + 1000;
+        //Actualizo el patrimonio
+        jugadorTurno.actualizar("patrimonio",bono);
         // todo acción de cobrar bono
         // todo ya se cobro el sueldo normal cada vez que se paso por "arriba" de una casilla verde
+
     }
     public void accionRosa(){
 
@@ -278,16 +295,51 @@ public class Juego {
         // todo acción de que te toque familia
         // todo falta crear casillas rosas en la bd
     }
-    public void accionNaranja(){
-        String[] casa1 = {"Casa: Chalet", "Valor: $200.000", "Ubicación: Centro"}; // codigo de prueba
-        String[] casa2 = {"Casa: Departamento", "Valor: $150.000", "Ubicación: Playa"}; // codigo de prueba
+    public void accionNaranja(Jugador jugadorTurno, int nivel){
 
-        VentanaCartaNaranja ventana = new VentanaCartaNaranja(casa1, casa2);// codigo de prueba
-        int eleccion = ventana.mostrarYEsperarSeleccion();// codigo de prueba
+        // Crear la carta y obtener las dos profesiones aleatorias
+        CartaNaranja casa = new CartaNaranja();
+        List<Integer> ids = casa.obtenerRandom(nivel);
+
+        // Buscar las dos cartas por ID
+        CartaNaranja casa1 = CartaNaranja.buscarCartaId(ids.get(0));
+        CartaNaranja casa2 = CartaNaranja.buscarCartaId(ids.get(1));
+
+        // Crear las descripciones para mostrar en la ventana
+        String[] desc1 = { "Propiedad : " + casa1.getDescripcion(), "Precio compra: " + casa1.getPrecio_compra(), "Precio venta: " + casa1.getPrecio_venta()};
+        String[] desc2 = {"Propiedad: " + casa2.getDescripcion(), "Precio compra: " + casa2.getPrecio_compra(), "Precio venta: " + casa2.getPrecio_venta()};
+
+        VentanaCartaNaranja ventana = new VentanaCartaNaranja(desc1,desc2);//
+        int seleccion = ventana.mostrarYEsperarSeleccion();
+
+        if (seleccion == 1){
+            jugadorTurno.actualizar("id_casa",ids.get(0).intValue());
+            ventanaJuego.actualizarProfesionJugador(jugadorTurno.getId(), casa1.getDescripcion());
+        }
+        if (seleccion == 2){
+            jugadorTurno.actualizar("id_casa",ids.get(1).intValue());
+            ventanaJuego.actualizarProfesionJugador(jugadorTurno.getId(), casa2.getDescripcion());
+        }
+
+
 
 
         // todo no se si esta la casilla naranaj en el juego original
         // todo accion de elegir entre dos casas de un mismo nivel (podria ser que primero te de nivel 1, luego nievl 2... creciendo)
+    }
+
+    private void borrarDatosBDDinamica() {
+        String sql = "DELETE FROM jugador, sqlite_sequence";
+
+        try (Connection conn = new ConexionBD(ConexionBD.url_dinamica).getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            int filas = stmt.executeUpdate();
+            System.out.println("Se eliminaron " + filas + " registros de la BD dinámica.");
+
+        } catch (SQLException e) {
+            System.err.println("Error al limpiar la base de datos dinámica: " + e.getMessage());
+        }
     }
 
     // ==========================

@@ -15,8 +15,7 @@ public class CartaNaranja {
     private int precio_compra;
     private int precio_venta;
     private int nivel;
-    final static String url_dinamica = "jdbc:sqlite:BD_LIFE_DINAMIC.sqlite";
-    final static String url_estatica = "jdbc:sqlite:BD_LIFE_STATIC.sqlite";
+
     // ==========================
     // GETTERS Y SETTERS
     // ==========================
@@ -52,12 +51,12 @@ public class CartaNaranja {
     public List<Integer> obtenerRandom(int nivel_buscado){
         String sqlBuscar = "SELECT * FROM CartaNaranja WHERE nivel = ? ORDER BY RANDOM() LIMIT 2";
         List<Integer> ids = new ArrayList<>();
-        try(Connection conn = new ConexionBD(url_dinamica).getConnection();
+        try(Connection conn = new ConexionBD(ConexionBD.url_estatica).getConnection();
             PreparedStatement stmt = conn.prepareStatement(sqlBuscar)){
             stmt.setInt(1,nivel_buscado);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                ids.add(rs.getInt("id_carta"));
+                ids.add(rs.getInt("id"));
             }
 
         } catch (Exception e ){
@@ -74,7 +73,7 @@ public class CartaNaranja {
        String sql = "SELECT * FROM CartaNaranja WHERE id = ?";
        CartaNaranja carta = null;
 
-       try (Connection conn = new ConexionBD(CartaNaranja.url_estatica).getConnection();
+       try (Connection conn = new ConexionBD(ConexionBD.url_estatica).getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
            stmt.setInt(1, id_casa);
