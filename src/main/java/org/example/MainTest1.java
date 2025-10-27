@@ -1,6 +1,5 @@
 package org.example;
 
-import org.example.utils.UserInput;
 
 public class MainTest1 {
 
