@@ -15,6 +15,7 @@ public class CartaAzul {
    private int sueldo;
    final static String url_dinamica = "jdbc:sqlite:BD_LIFE_DINAMIC.sqlite";
     final static String url_estatica = "jdbc:sqlite:BD_LIFE_STATIC.sqlite";
+
     // ==========================
     // GETTERS Y SETTERS
     // ==========================
