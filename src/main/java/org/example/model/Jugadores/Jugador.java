@@ -16,6 +16,7 @@ public class Jugador {
     private int id_jugador;
     private String nombre;
     private CartaAzul profesion;
+
     private int patrimonio;
     private ArrayList<NPC> familia;
     private ArrayList<Casa> casas;
