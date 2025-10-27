@@ -1,7 +1,6 @@
 package org.example;
 
-import static org.example.GUI.VentanaJuego.pedirCantidadJugadores;
-import static org.example.GUI.VentanaJuego.pedirNombresJugadores;
+import static org.example.GUI.VentanaJuego.*;
 import static org.example.utils.ConsolaColor.*;
 
 import org.example.GUI.VentanaJuego;
@@ -10,8 +9,8 @@ import org.example.model.Piezas.Cartas.CartaAzul;
 import org.example.model.Piezas.Casilla;
 import org.example.model.Piezas.Tablero;
 import org.example.utils.PantallaColor;
-import org.example.utils.UserInput;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
@@ -22,10 +21,12 @@ public class Juego {
 
     private int cantJugadores;
     private int cantMovimientosActuales = 0;
+    private int finJuego;
+
     private VentanaJuego ventanaJuego;
 
     //Intancia de user input
-    UserInput ui = new UserInput();
+    //UserInput ui = new UserInput();
 
     // ==========================
     // CONSTRUCTORES
@@ -52,119 +53,132 @@ public class Juego {
             // metodo que cambia el jugador
             Jugador jugadorTurno = cambiarJugador(cantMovimientosActuales);
 
-            // metodo que calcula la siguiente posicion (teniendo en cuenta stops y fin del tablero)
-            int posicion = tablero.recorrerHastaSiguientePosicion(jugadorTurno,girarRuleta());
-
             // if que verifica que el jugador no esté en el final
-            if (posicion != tablero.getCantCasillas()){
+            if (jugadorTurno.getPosicion() != tablero.getCantCasillas()) {
 
-                // metodo que mueve al jugador a la posicion calculada previamente
-                jugadorTurno.moverJugador(posicion);
-                //Obtengo el tercio al que pertenece la posicion, para casillas que usen cartas Azul y Naranja
-                int nivel = tablero.obtenerTercio(posicion);
-                // switch con metodo que retorna el color de la casilla
-                switch (Casilla.obtenerColorCasillaPorId(posicion)) {
+                // metodo que calcula la siguiente posicion (teniendo en cuenta stops y fin del tablero)
+                int siguientePosicion = tablero.recorrerHastaSiguientePosicion(jugadorTurno,girarRuleta());
 
-                    case "amarilla":
-                        ventanaJuego.setDescripcion("Caiste en una casilla AMARILLO"," Posición: " + posicion , PantallaColor.AMARILLO);
-                        // todo acción random (quizas girar ruleta y que te pueda tocar cualquier carta)
+                // verificamos que la posicion sea menor que el final
+                if (siguientePosicion < tablero.getCantCasillas()){
 
-                        break;
+                    // metodo que mueve al jugador a la posicion calculada previamente
+                    jugadorTurno.moverJugador(siguientePosicion);
+                    //Obtengo el tercio al que pertenece la posicion, para casillas que usen cartas Azul y Naranja
+                    //int nivel = tablero.obtenerTercio(posicion);
+                    // switch con metodo que retorna el color de la casilla
+                    switch (Casilla.obtenerColorCasillaPorId(siguientePosicion)) {
+
+                        case "amarilla":
+                            ventanaJuego.setDescripcion("Caiste en una casilla AMARILLO"," Posición: " + siguientePosicion , PantallaColor.AMARILLO);
+                            // todo acción random (quizas girar ruleta y que te pueda tocar cualquier carta)
+
+                            break;
 
                     case "azul":
-                        jugadorTurno.insertar();
-                        ventanaJuego.setDescripcion("Caiste en una casilla AZUL"," Posición: "+ posicion, PantallaColor.AZUL);
-                        // todo accion de elegir entre dos profesiones de un mismo nivel (podria ser que primero te de nivel 1, luego nievl 2... creciendo)
-                        CartaAzul profesion = new CartaAzul();
-                        List<Integer> ids = profesion.obtenerRandom(nivel);
-                        System.out.println("elija 1 o 2");
-                        //Obtenemos detalles de cada profesion
-                        CartaAzul profesion1 = CartaAzul.buscarCartaId(ids.get(0));
-                        CartaAzul profesion2 = CartaAzul.buscarCartaId(ids.get(1));
-                        System.out.println("1 Profesion: " + profesion1.getTitulo() + " salario : "+ profesion1.getSueldo());
-                        System.out.println("1 Profesion: " + profesion2.getTitulo() + " salario : "+ profesion2.getSueldo());
-                        int seleccion = ui.getInt("elija 1 o 2",1,2);
-                        System.out.println(jugadorTurno.getId());
-                        if (seleccion ==1){
-                            jugadorTurno.actualizar("id_profesion",ids.get(0).intValue());
-                        }
-                       if (seleccion == 2){
-                           jugadorTurno.actualizar("id_profesion",ids.get(1).intValue());
-                       }
+//                        jugadorTurno.insertar();
+//                        ventanaJuego.setDescripcion("Caiste en una casilla AZUL"," Posición: "+ posicion, PantallaColor.AZUL);
+//                        // todo accion de elegir entre dos profesiones de un mismo nivel (podria ser que primero te de nivel 1, luego nievl 2... creciendo)
+//                        CartaAzul profesion = new CartaAzul();
+//                        List<Integer> ids = profesion.obtenerRandom(nivel);
+//                        System.out.println("elija 1 o 2");
+//                        //Obtenemos detalles de cada profesion
+//                        CartaAzul profesion1 = CartaAzul.buscarCartaId(ids.get(0));
+//                        CartaAzul profesion2 = CartaAzul.buscarCartaId(ids.get(1));
+//                        System.out.println("1 Profesion: " + profesion1.getTitulo() + " salario : "+ profesion1.getSueldo());
+//                        System.out.println("1 Profesion: " + profesion2.getTitulo() + " salario : "+ profesion2.getSueldo());
+//                        //int seleccion = ui.getInt("elija 1 o 2",1,2);
+//                        System.out.println(jugadorTurno.getId());
+//                        if (seleccion ==1){
+//                            jugadorTurno.actualizar("id_profesion",ids.get(0).intValue());
+//                        }
+//                       if (seleccion == 2){
+//                           jugadorTurno.actualizar("id_profesion",ids.get(1).intValue());
+//                       }
                         break;
 
-                    case "roja":
-                        ventanaJuego.setDescripcion("Caiste en una casilla ROJA"," Posición: "+ posicion, PantallaColor.ROJO);
-                        // todo acción de pagar impuesto
+                        case "roja":
+                            ventanaJuego.setDescripcion("Caiste en una casilla ROJA"," Posición: "+ siguientePosicion, PantallaColor.ROJO);
+                            // todo acción de pagar impuesto
 
-                        break;
+                            break;
 
-                    case "verde":
-                        ventanaJuego.setDescripcion("Caiste en una casilla VERDE"," Posición: "+ posicion, PantallaColor.VERDE);
-                        // todo acción de cobrar bono
-                        // todo ya se cobro el sueldo normal cada vez que se paso por "arriba" de una casilla verde
+                        case "verde":
+                            ventanaJuego.setDescripcion("Caiste en una casilla VERDE"," Posición: "+ siguientePosicion, PantallaColor.VERDE);
+                            // todo acción de cobrar bono
+                            // todo ya se cobro el sueldo normal cada vez que se paso por "arriba" de una casilla verde
 
-                        break;
+                            break;
 
-                    case "rosa":
-                        ventanaJuego.setDescripcion("Caiste en una casilla ROSA"," Posición: " + posicion, PantallaColor.ROSA);
-                        // todo acción de que te toque familia
-                        // todo falta crear casillas rosas en la bd
+                        case "rosa":
+                            ventanaJuego.setDescripcion("Caiste en una casilla ROSA"," Posición: " + siguientePosicion, PantallaColor.ROSA);
+                            // todo acción de que te toque familia
+                            // todo falta crear casillas rosas en la bd
 
-                        break;
+                            break;
 
-                    case "naranja":
-                        ventanaJuego.setDescripcion("Caiste en una casilla NARANJA"," Posición: " + posicion, PantallaColor.NARANJA);
+                        case "naranja":
+                            ventanaJuego.setDescripcion("Caiste en una casilla NARANJA"," Posición: " + siguientePosicion, PantallaColor.NARANJA);
 
-                        // todo no se si esta la casilla naranaj en el juego original
-                        // todo accion de elegir entre dos casas de un mismo nivel (podria ser que primero te de nivel 1, luego nievl 2... creciendo)
-                        break;
+                            // todo no se si esta la casilla naranaj en el juego original
+                            // todo accion de elegir entre dos casas de un mismo nivel (podria ser que primero te de nivel 1, luego nievl 2... creciendo)
+                            break;
 
 
-                    case "stop":
-                        ventanaJuego.setDescripcion("Caiste en una casilla STOP"," Posición: " + posicion, PantallaColor.BLANCO);
+                        case "stop":
+                            ventanaJuego.setDescripcion("Caiste en una casilla STOP"," Posición: " + siguientePosicion, PantallaColor.BLANCO);
 
-                        // todo acción especial (las casiilas de stop son siempre fijas en el tablero)
-                        // todo por ejemplo casilla 5 siempre te obliga a elegir una profesion
-                        // todo por ejemplo casilla 11 simpre te hace girar la ruleta con solo dos opciones (cobrar/pagar)
+                            // todo acción especial (las casiilas de stop son siempre fijas en el tablero)
+                            // todo por ejemplo casilla 5 siempre te obliga a elegir una profesion
+                            // todo por ejemplo casilla 11 simpre te hace girar la ruleta con solo dos opciones (cobrar/pagar)
 
-                        if (posicion==5){
+                            if (siguientePosicion==5){
 //                            jugadorTurno.setProfesion(new Profesion("ingeEjemplo",100)); //profesion de prueba
 //                            jugadorTurno.getProfesion().mostrarProfesion();
-                        }
+                            }
 
-                        break;
+                            break;
 
-                    default:
-                        System.out.println(GRIS + "Color no reconocido: Posición: " + posicion + RESET);
-                        break;
+                        default:
+                            System.out.println(GRIS + "Color no reconocido: Posición: " + siguientePosicion + RESET);
+                            break;
+                    }
+
+                } else {
+
+                    ventanaJuego.setDescripcion("llegaste al final"," Posición: " + siguientePosicion, PantallaColor.BLANCO);
+                    jugadorTurno.moverJugador(tablero.getCantCasillas());
+                    finJuego -= 1;
                 }
 
+                ventanaJuego.actualizarValoresJugador(jugadorTurno.getId(),jugadorTurno.getPosicion(), jugadorTurno.getPatrimonio(), jugadorTurno.getCantidadCasas(), jugadorTurno.getCantidadFamiliares());
+
+                // if que verifica el final de la partida
+                if (finJuego == 0){ // verificar el fin real del juego (cuando todos los jugadores llegan a la meta)
+
+                    // todo verificar ganador de la partida
+
+                    seguirPartida = false;
+                }
             }
 
-            ventanaJuego.actualizarValoresJugador(jugadorTurno.getId(),jugadorTurno.getPosicion(), jugadorTurno.getPatrimonio(), jugadorTurno.getCantidadCasas(), jugadorTurno.getCantidadFamiliares());
-
-            // if que verifica el final de la partida
-            // todo verificar el fin real del juego (cuando todos los jugadores llegan a la meta)
-            if (cantMovimientosActuales > 20){
-
-                // todo verificar ganador de la partida
-
-                seguirPartida = false;
-            }
 
             cantMovimientosActuales += 1;
         } while (seguirPartida);
 
+
+        // variable para finalizar juego
+        boolean fin = ventanaJuego.jugarDeNuevo();
+
         // cierra la ventanaJuego del juego
         ventanaJuego.dispose();
 
-        // retornamos true si queremo seguir jugando o false si no queremos seguir jugando
-        return UserInput.getBolean("¿DESEA JUGAR DE NUEVO?\n1. si\n2. no");
+        return fin;
     }
 
     public void inicializar(){
         this.cantJugadores = pedirCantidadJugadores();
+        this.finJuego = cantJugadores;
         this.jugadores = pedirNombresJugadores(cantJugadores);
         this.ventanaJuego = new VentanaJuego(jugadores);
     }
