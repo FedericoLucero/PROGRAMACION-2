@@ -5,10 +5,12 @@ import static org.example.utils.ConsolaColor.*;
 
 import org.example.GUI.VentanaJuego;
 import org.example.model.Jugadores.*;
+import org.example.model.Piezas.Cartas.CartaAzul;
 import org.example.model.Piezas.Casilla;
 import org.example.model.Piezas.Tablero;
 import org.example.utils.PantallaColor;
-
+import org.example.utils.UserInput;
+import java.util.List;
 import javax.swing.*;
 import java.awt.*;
 
@@ -23,6 +25,7 @@ public class Juego {
 
     private VentanaJuego ventanaJuego;
 
+    UserInput ui = new UserInput();
     // ==========================
     // CONSTRUCTORES
     // ==========================
@@ -59,7 +62,9 @@ public class Juego {
 
                     // metodo que mueve al jugador a la posicion calculada previamente
                     jugadorTurno.moverJugador(siguientePosicion);
-
+                    //Obtener nivel
+                    int posicion = jugadorTurno.getPosicion();
+                    int nivel = tablero.obtenerTercio(posicion);
                     // switch con metodo que retorna el color de la casilla
                     switch (Casilla.obtenerColorCasillaPorId(siguientePosicion)) {
 
@@ -72,7 +77,25 @@ public class Juego {
                         case "azul":
                             ventanaJuego.setDescripcion("Caiste en una casilla AZUL"," Posición: "+ siguientePosicion, PantallaColor.AZUL);
                             // todo accion de elegir entre dos profesiones de un mismo nivel (podria ser que primero te de nivel 1, luego nievl 2... creciendo)
-
+                            jugadorTurno.insertar();
+                            ventanaJuego.setDescripcion("Caiste en una casilla AZUL"," Posición: "+ posicion, PantallaColor.AZUL);
+                            // todo accion de elegir entre dos profesiones de un mismo nivel (podria ser que primero te de nivel 1, luego nievl 2... creciendo)
+                            CartaAzul profesion = new CartaAzul();
+                            List<Integer> ids = profesion.obtenerRandom(nivel);
+                            System.out.println("elija 1 o 2");
+                            //Obtenemos detalles de cada profesion
+                            CartaAzul profesion1 = CartaAzul.buscarCartaId(ids.get(0));
+                            CartaAzul profesion2 = CartaAzul.buscarCartaId(ids.get(1));
+                            System.out.println("1 Profesion: " + profesion1.getTitulo() + " salario : "+ profesion1.getSueldo());
+                            System.out.println("1 Profesion: " + profesion2.getTitulo() + " salario : "+ profesion2.getSueldo());
+                            int seleccion = ui.getInt("elija 1 o 2",1,2);
+                            System.out.println(jugadorTurno.getId());
+                            if (seleccion ==1){
+                                jugadorTurno.actualizar("id_profesion",ids.get(0).intValue());
+                            }
+                            if (seleccion == 2){
+                                jugadorTurno.actualizar("id_profesion",ids.get(1).intValue());
+                            }
                             break;
 
                         case "roja":

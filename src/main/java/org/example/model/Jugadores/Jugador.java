@@ -130,8 +130,23 @@ public class Jugador {
             stmt.setInt(5, hijos);
             stmt.setInt(6, deuda);
             stmt.executeUpdate();
-            System.out.println("Jugador insertado correctamente: " + nombre);
+            // Intento normal: getGeneratedKeys()
+            try (ResultSet rs = stmt.getGeneratedKeys()) {
+                if (rs != null && rs.next()) {
+                    this.id_jugador = rs.getInt(1);
+                    System.out.println("Jugador insertado con ID (generatedKeys): " + this.id_jugador);
+                    return;
+                }
+            }
 
+            // Fallback para SQLite
+            try (PreparedStatement stmt2 = conn.prepareStatement("SELECT last_insert_rowid() AS id");
+                 ResultSet rs2 = stmt2.executeQuery()) {
+                if (rs2.next()) {
+                    this.id_jugador = rs2.getInt("id");
+                    System.out.println("Jugador insertado con ID (last_insert_rowid): " + this.id_jugador);
+                }
+            }
         } catch (SQLException e) {
             System.err.println("Error al insertar jugador: " + e.getMessage());
         }
@@ -168,7 +183,7 @@ public class Jugador {
     public boolean actualizar(String campo, int nuevoValor) {
         String sql;
         switch (campo) {
-            case "profesion": sql = "UPDATE jugador SET profesion=? WHERE id_jugador=?";break;
+            case "id_profesion": sql = "UPDATE jugador SET id_profesion=? WHERE id_jugador=?";break;
             case "patrimonio": sql = "UPDATE jugador SET patrimonio=? WHERE id_jugador=?"; break;
             case "estado_civil": sql = "UPDATE jugador SET estado_civil=? WHERE id_jugador=?"; break;
             case "hijos": sql = "UPDATE jugador SET hijos=? WHERE id_jugador=?"; break;

@@ -141,4 +141,25 @@ public class Tablero {
             default: return ConsolaColor.RESET;
         }
     }
+    /**
+     * Devuelve el tercio (1, 2 o 3) al que pertenece una casilla dada.
+     * argumento: casillaActual numero de casilla actual
+     * return 1 si esta en el primer tercio, 2 si esta en el segundo, 3 si esta en el tercero
+     */
+    public int obtenerTercio(int casillaActual) {
+        if (cantCasillas <= 0) {
+            throw new IllegalStateException("El tablero no tiene casillas definidas.");
+        }
+
+        double tercio = cantCasillas / 3.0;
+
+        if (casillaActual <= tercio) {
+            return 1;
+        } else if (casillaActual <= 2 * tercio) {
+            return 2;
+        } else {
+            return 3;
+        }
+    }
+
 }
