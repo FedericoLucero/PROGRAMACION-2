@@ -13,8 +13,7 @@ public class CartaAzul {
    private int nivel;
    private String titulo;
    private int sueldo;
-   final static String url_dinamica = "jdbc:sqlite:BD_LIFE_DINAMIC.sqlite";
-    final static String url_estatica = "jdbc:sqlite:BD_LIFE_STATIC.sqlite";
+
 
     // ==========================
     // GETTERS Y SETTERS
@@ -43,7 +42,7 @@ public class CartaAzul {
     public List<Integer> obtenerRandom(int nivel_buscado){
         String sqlBuscar = "SELECT * FROM CartaAzul WHERE nivel = ? ORDER BY RANDOM() LIMIT 2";
         List<Integer> ids = new ArrayList<>();
-        try(Connection conn = new ConexionBD(url_estatica).getConnection();
+        try(Connection conn = new ConexionBD(ConexionBD.url_estatica).getConnection();
             PreparedStatement stmt = conn.prepareStatement(sqlBuscar)){
             stmt.setInt(1,nivel_buscado);
             ResultSet rs = stmt.executeQuery();
@@ -65,7 +64,7 @@ public class CartaAzul {
         String sql = "SELECT * FROM CartaAzul WHERE id = ?";
         CartaAzul carta = null;
 
-        try (Connection conn = new ConexionBD(CartaNaranja.url_estatica).getConnection();
+        try (Connection conn = new ConexionBD(ConexionBD.url_estatica).getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, id_profesion);

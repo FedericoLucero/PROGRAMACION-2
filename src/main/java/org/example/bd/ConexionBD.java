@@ -9,6 +9,8 @@ public class ConexionBD{
     private final String url;
     private Connection connection;
 
+    public final static String url_dinamica = "jdbc:sqlite:BD_LIFE_DINAMIC.sqlite";
+    public final static String url_estatica = "jdbc:sqlite:BD_LIFE_STATIC.sqlite";
     public ConexionBD(String url) {
         this.url = url;
     }

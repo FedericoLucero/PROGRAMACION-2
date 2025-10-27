@@ -29,8 +29,6 @@ public class Jugador {
 
 
 
-    private static final String url_dinamica ="jdbc:sqlite:BD_LIFE_DINAMIC.sqlite";
-
     // ==========================
     // CONSTRUCTORES
     // ==========================
@@ -132,7 +130,7 @@ public class Jugador {
         String sqlInsertar = "INSERT INTO jugador (nombre, patrimonio, posicion, estado_civil, hijos, deudas) "
                 + "VALUES (?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = new ConexionBD(url_dinamica).getConnection();
+        try (Connection conn = new ConexionBD(ConexionBD.url_dinamica).getConnection();
              PreparedStatement stmt = conn.prepareStatement(sqlInsertar)) {
 
             stmt.setString(1, nombre);
@@ -176,7 +174,7 @@ public class Jugador {
                 return false;
         }
 
-        try (Connection conn = new ConexionBD(url_dinamica).getConnection();
+        try (Connection conn = new ConexionBD(ConexionBD.url_dinamica).getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, nuevoValor);
@@ -206,7 +204,7 @@ public class Jugador {
                 return false;
         }
 
-        try (Connection conn = new ConexionBD(url_dinamica).getConnection();
+        try (Connection conn = new ConexionBD(ConexionBD.url_dinamica).getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, nuevoValor);
@@ -237,7 +235,7 @@ public class Jugador {
         String sql = "SELECT * FROM jugador WHERE id_jugador = ?";
         Jugador jugador = null;
 
-        try (Connection conn = new ConexionBD(url_dinamica).getConnection();
+        try (Connection conn = new ConexionBD(ConexionBD.url_dinamica).getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, idJugador);

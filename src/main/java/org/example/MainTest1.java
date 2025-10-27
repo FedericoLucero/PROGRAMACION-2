@@ -14,7 +14,6 @@ public class MainTest1 {
 
             // objeto principal donde se realiza la partida
             Juego juego = new Juego();
-
             // metodo donde se realiza la partida
             jugarDeNuevo = juego.jugar();
 
