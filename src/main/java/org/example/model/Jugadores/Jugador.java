@@ -190,6 +190,7 @@ public class Jugador {
     }
 
     /** Actualiza campos tipo int */
+    /** Actualiza campos tipo int */
     public boolean actualizar(String campo, int nuevoValor) {
         String sql;
         switch (campo) {
@@ -199,6 +200,7 @@ public class Jugador {
             case "hijos": sql = "UPDATE jugador SET hijos=? WHERE id_jugador=?"; break;
             case "posicion": sql = "UPDATE jugador SET posicion=? WHERE id_jugador=?"; break;
             case "deudas": sql = "UPDATE jugador SET deudas=? WHERE id_jugador=?"; break;
+            case "id_casa": sql = "UPDATE jugador SET id_casa=? WHERE id_jugador=?"; break; // ← AGREGAR
             default:
                 System.err.println("Campo no válido para tipo int: " + campo);
                 return false;
@@ -218,6 +220,15 @@ public class Jugador {
                     case "hijos" -> this.hijos = nuevoValor;
                     case "posicion" -> this.posicion = nuevoValor;
                     case "deudas" -> this.deuda = nuevoValor;
+                    // ↓ AGREGAR ESTOS CASOS - importante para id_profesion e id_casa
+                    case "id_profesion" -> {
+                        // Recargar la profesión desde BD
+                        this.profesion = CartaAzul.buscarCartaId(nuevoValor);
+                    }
+                    case "id_casa" -> {
+                        // Recargar la casa desde BD
+                        this.casa = CartaNaranja.buscarCartaId(nuevoValor);
+                    }
                 }
             }
             return filas > 0;
