@@ -1,5 +1,7 @@
 package org.example.GUI;
 
+import org.example.model.Jugadores.Jugador;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Random;
@@ -10,7 +12,13 @@ public class VentanaJuego extends JFrame {
     private JLabel lblRuleta;
     private JLabel lblTablero;
     private JPanel panelInfoJugadores;
-    private JLabel lblResultadoRuleta; // nuevo label para mostrar el número
+    private JLabel lblResultadoRuleta;
+    private JPanel panelDescripcion;
+    private JLabel lblDescripcion;
+    private JLabel lblDescripcion2;
+
+    private JPanel panelTurno;
+    private JLabel lblTurnoJugador;
 
     private ImageIcon iconRuleta;
     private ImageIcon iconTablero;
@@ -19,47 +27,53 @@ public class VentanaJuego extends JFrame {
     private Integer numeroRuleta = null;
     private final Object lock = new Object();
 
-    public VentanaJuego() {
+    private JPanel[] panelesJugadores;
+    private JLabel[][] labelsJugadores;
+
+    public VentanaJuego(Jugador[] nombresJugadores) {
         setTitle("Juego Life - Ventana Principal");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(2000, 700);
+        setSize(1100, 750);
         setLocationRelativeTo(null);
-        setLayout(new BorderLayout(10, 10));
 
         cargarImagenes();
-        construirPanelTablero();
-        construirPanelDerecho();
+
+        // --- Panel izquierdo (tablero) ---
+        JPanel panelTablero = construirPanelTablero();
+
+        // --- Panel derecho (jugadores, descripción, turno, ruleta) ---
+        JPanel panelDerecho = construirPanelDerecho(nombresJugadores);
+
+        // --- JSplitPane para unir tablero y panel derecho ---
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panelTablero, panelDerecho);
+        splitPane.setResizeWeight(0.7); // 70% tablero, 30% panel derecho
+        splitPane.setDividerSize(5);
+
+        add(splitPane, BorderLayout.CENTER);
 
         setVisible(true);
     }
 
     private void cargarImagenes() {
         try {
-            // Cargar ruleta
             java.net.URL ruletaURL = getClass().getResource("/imagenes/ruleta.png");
             if (ruletaURL != null) {
-                iconRuleta = new ImageIcon(ruletaURL);
-                iconRuleta = new ImageIcon(iconRuleta.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH));
-            } else {
-                System.err.println("No se encontró la imagen de la ruleta");
-            }
+                iconRuleta = new ImageIcon(new ImageIcon(ruletaURL)
+                        .getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH));
+            } else System.err.println("No se encontró la imagen de la ruleta");
 
-            // Cargar tablero
             java.net.URL tableroURL = getClass().getResource("/imagenes/tablero.jpg");
             if (tableroURL != null) {
-                iconTablero = new ImageIcon(tableroURL);
-                iconTablero = new ImageIcon(iconTablero.getImage().getScaledInstance(600, 600, Image.SCALE_SMOOTH));
-            } else {
-                System.err.println("No se encontró la imagen del tablero");
-            }
+                iconTablero = new ImageIcon(new ImageIcon(tableroURL)
+                        .getImage().getScaledInstance(600, 600, Image.SCALE_SMOOTH));
+            } else System.err.println("No se encontró la imagen del tablero");
 
         } catch (Exception e) {
             System.err.println("Error al cargar imágenes: " + e.getMessage());
         }
     }
 
-
-    private void construirPanelTablero() {
+    private JPanel construirPanelTablero() {
         JPanel panelTablero = new JPanel(new BorderLayout());
         panelTablero.setBorder(BorderFactory.createTitledBorder("Tablero"));
 
@@ -68,30 +82,124 @@ public class VentanaJuego extends JFrame {
         lblTablero.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         panelTablero.add(lblTablero, BorderLayout.CENTER);
 
-        add(panelTablero, BorderLayout.CENTER);
+        return panelTablero;
     }
 
-    private void construirPanelDerecho() {
-        JPanel panelDerecho = new JPanel();
-        panelDerecho.setLayout(new BoxLayout(panelDerecho, BoxLayout.Y_AXIS));
-        panelDerecho.setPreferredSize(new Dimension(250, 0));
+    private JPanel construirPanelDerecho(Jugador[] nombresJugadores) {
+        // Panel derecho con FlowLayout centrado
+        JPanel panelDerecho = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 10));
+        panelDerecho.setPreferredSize(new Dimension(300, 0));
 
+        // Panel vertical donde se añaden subpaneles
+        JPanel panelVertical = new JPanel();
+        panelVertical.setLayout(new BoxLayout(panelVertical, BoxLayout.Y_AXIS));
+        panelVertical.setOpaque(false);
+
+        // --- Jugadores ---
         panelInfoJugadores = new JPanel();
         panelInfoJugadores.setLayout(new BoxLayout(panelInfoJugadores, BoxLayout.Y_AXIS));
         panelInfoJugadores.setBorder(BorderFactory.createTitledBorder("Jugadores"));
+        panelInfoJugadores.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        for (int i = 1; i <= 4; i++) {
-            JLabel lblJugador = new JLabel("Jugador " + i + ": [info]");
-            lblJugador.setAlignmentX(Component.LEFT_ALIGNMENT);
-            panelInfoJugadores.add(lblJugador);
+        panelesJugadores = new JPanel[nombresJugadores.length];
+        labelsJugadores = new JLabel[nombresJugadores.length][4]; // 0=pos, 1=dólares, 2=casas, 3=familia
+
+        for (int i = 0; i < nombresJugadores.length; i++) {
+            Jugador jugador = nombresJugadores[i];
+            JPanel panelJugador = new JPanel();
+            panelJugador.setLayout(new BoxLayout(panelJugador, BoxLayout.X_AXIS));
+            panelJugador.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+            JLabel lblNombre = new JLabel(jugador.getNombre() + ": ");
+            panelJugador.add(lblNombre);
+            panelJugador.add(Box.createRigidArea(new Dimension(5,0)));
+
+            JLabel lblPos = new JLabel("Pos: [00]");
+            lblPos.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 14));
+            labelsJugadores[i][0] = lblPos;
+            panelJugador.add(lblPos);
+            panelJugador.add(Box.createRigidArea(new Dimension(5,0)));
+
+            JLabel lblDolar = new JLabel("💲: [00]");
+            lblDolar.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 14));
+            labelsJugadores[i][1] = lblDolar;
+            panelJugador.add(lblDolar);
+            panelJugador.add(Box.createRigidArea(new Dimension(5,0)));
+
+            JLabel lblCasa = new JLabel("🏠: [00]");
+            lblCasa.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 14));
+            labelsJugadores[i][2] = lblCasa;
+            panelJugador.add(lblCasa);
+            panelJugador.add(Box.createRigidArea(new Dimension(5,0)));
+
+            JLabel lblFamilia = new JLabel("👪: [00]");
+            lblFamilia.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 14));
+            labelsJugadores[i][3] = lblFamilia;
+            panelJugador.add(lblFamilia);
+
+            panelInfoJugadores.add(panelJugador);
             panelInfoJugadores.add(Box.createRigidArea(new Dimension(0, 10)));
+            panelesJugadores[i] = panelJugador;
         }
 
-        panelDerecho.add(panelInfoJugadores);
-        panelDerecho.add(Box.createRigidArea(new Dimension(0, 20)));
+        panelVertical.add(panelInfoJugadores);
+        panelVertical.add(Box.createRigidArea(new Dimension(0, 10)));
 
+        // --- Descripción ---
+        panelDescripcion = new JPanel();
+        panelDescripcion.setBorder(BorderFactory.createTitledBorder("Descripción actual"));
+        panelDescripcion.setBackground(Color.LIGHT_GRAY);
+        panelDescripcion.setMaximumSize(new Dimension(250, 200));
+        panelDescripcion.setPreferredSize(new Dimension(250, 200));
+        panelDescripcion.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JPanel panelLabels = new JPanel();
+        panelLabels.setLayout(new BoxLayout(panelLabels, BoxLayout.Y_AXIS));
+        panelLabels.setOpaque(false);
+
+        lblDescripcion = new JLabel("Esperando acción...");
+        lblDescripcion.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblDescripcion.setHorizontalAlignment(SwingConstants.CENTER);
+        lblDescripcion.setAlignmentX(Component.CENTER_ALIGNMENT);
+        lblDescripcion.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+
+        lblDescripcion2 = new JLabel("...");
+        lblDescripcion2.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblDescripcion2.setHorizontalAlignment(SwingConstants.CENTER);
+        lblDescripcion2.setAlignmentX(Component.CENTER_ALIGNMENT);
+        lblDescripcion2.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+
+        panelLabels.add(lblDescripcion);
+        panelLabels.add(Box.createRigidArea(new Dimension(0, 10)));
+        panelLabels.add(lblDescripcion2);
+
+        panelDescripcion.setLayout(new BorderLayout());
+        panelDescripcion.add(panelLabels, BorderLayout.CENTER);
+
+        panelVertical.add(panelDescripcion);
+        panelVertical.add(Box.createRigidArea(new Dimension(0, 20)));
+
+        // --- Turno ---
+        panelTurno = new JPanel();
+        panelTurno.setBorder(BorderFactory.createTitledBorder("Turno actual"));
+        panelTurno.setBackground(Color.WHITE);
+        panelTurno.setMaximumSize(new Dimension(250, 50));
+        panelTurno.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        lblTurnoJugador = new JLabel("Esperando jugador...");
+        lblTurnoJugador.setFont(new Font("Arial", Font.BOLD, 14));
+        lblTurnoJugador.setHorizontalAlignment(SwingConstants.CENTER);
+
+        panelTurno.setLayout(new BorderLayout());
+        panelTurno.add(lblTurnoJugador, BorderLayout.CENTER);
+
+        panelVertical.add(panelTurno);
+        panelVertical.add(Box.createRigidArea(new Dimension(0, 10)));
+
+        // --- Ruleta ---
         JPanel panelRuleta = new JPanel(new BorderLayout(5, 5));
         panelRuleta.setBorder(BorderFactory.createTitledBorder("Ruleta"));
+        panelRuleta.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         lblRuleta = new JLabel(iconRuleta);
         lblRuleta.setHorizontalAlignment(JLabel.CENTER);
@@ -99,37 +207,38 @@ public class VentanaJuego extends JFrame {
         lblRuleta.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         panelRuleta.add(lblRuleta, BorderLayout.CENTER);
 
-        // Label para mostrar resultado de la ruleta
         lblResultadoRuleta = new JLabel("Número: ");
         lblResultadoRuleta.setHorizontalAlignment(JLabel.CENTER);
         lblResultadoRuleta.setFont(new Font("Arial", Font.BOLD, 18));
-        panelRuleta.add(lblResultadoRuleta, BorderLayout.NORTH); // arriba de la ruleta
+        panelRuleta.add(lblResultadoRuleta, BorderLayout.NORTH);
 
         btnGirarRuleta = new JButton("Girar Ruleta");
         panelRuleta.add(btnGirarRuleta, BorderLayout.SOUTH);
 
-        panelDerecho.add(panelRuleta);
-        add(panelDerecho, BorderLayout.EAST);
+        panelVertical.add(panelRuleta);
+
+        // --- Añadimos el panel vertical al contenedor centrado ---
+        panelDerecho.add(panelVertical);
+
+        return panelDerecho;
     }
 
-    /**
-     * Gira la ruleta de forma "sincrónica", mostrando el número en la ventana.
-     */
+    // --- Métodos auxiliares ---
+    public void setDescripcion(String texto1, String texto2, Color colorFondo) {
+        lblDescripcion.setText(texto1);
+        lblDescripcion2.setText(texto2);
+        panelDescripcion.setBackground(colorFondo);
+    }
+
     public int girarRuletaSync() {
         btnGirarRuleta.setEnabled(true);
         numeroRuleta = null;
-        lblResultadoRuleta.setText("Número: ..."); // limpiar resultado previo
-
-        for (var al : btnGirarRuleta.getActionListeners()) {
-            btnGirarRuleta.removeActionListener(al);
-        }
+        for (var al : btnGirarRuleta.getActionListeners()) btnGirarRuleta.removeActionListener(al);
 
         btnGirarRuleta.addActionListener(e -> {
             int numero = random.nextInt(10) + 1;
             btnGirarRuleta.setEnabled(false);
-
-            lblResultadoRuleta.setText("Número: " + numero); // mostrar número en la ventana
-
+            lblResultadoRuleta.setText("Número: " + numero);
             synchronized (lock) {
                 numeroRuleta = numero;
                 lock.notify();
@@ -138,22 +247,76 @@ public class VentanaJuego extends JFrame {
 
         synchronized (lock) {
             while (numeroRuleta == null) {
-                try {
-                    lock.wait();
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                }
+                try { lock.wait(); } catch (InterruptedException ex) { ex.printStackTrace(); }
             }
         }
-
         return numeroRuleta;
     }
 
-    public static void main(String[] args) {
-        VentanaJuego ventana = new VentanaJuego();
+    public void setTurnoJugador(String nombreJugador) {
+        lblTurnoJugador.setText("Turno del jugador: " + nombreJugador);
+    }
 
-        // Ahora podemos obtener el número directamente y mostrarlo en main si queremos
-        int numero = ventana.girarRuletaSync();
-        System.out.println("Número obtenido: " + numero);
+    public void actualizarValoresJugador(int indice, int posicion, int dolares, int casas, int familia) {
+        if (indice < 0 || indice >= labelsJugadores.length) return;
+        labelsJugadores[indice][0].setText("Pos: [" + String.format("%02d", posicion) + "]");
+        labelsJugadores[indice][1].setText("💲: [" + dolares + "]");
+        labelsJugadores[indice][2].setText("🏠: [" + String.format("%02d", casas) + "]");
+        labelsJugadores[indice][3].setText("👨‍👩‍👦: [" + String.format("%02d", familia) + "]");
+    }
+
+    // --- Pedir cantidad y nombres ---
+    public static int pedirCantidadJugadores() {
+        int cantidad = 0;
+        boolean valido = false;
+        while (!valido) {
+            String input = JOptionPane.showInputDialog(null,
+                    "Ingrese la cantidad de jugadores (1-4):",
+                    "Configuración de juego", JOptionPane.QUESTION_MESSAGE);
+            if (input == null) System.exit(0);
+            try {
+                cantidad = Integer.parseInt(input);
+                if (cantidad >= 1 && cantidad <= 4) valido = true;
+                else JOptionPane.showMessageDialog(null, "Debe ser un número entre 1 y 4.");
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Ingrese un número válido.");
+            }
+        }
+        return cantidad;
+    }
+
+    public static Jugador[] pedirNombresJugadores(int cantidad) {
+        Jugador[] jugadores = new Jugador[cantidad];
+        for (int i = 0; i < cantidad; i++) {
+            String nombre;
+            do {
+                nombre = JOptionPane.showInputDialog(null,
+                        "Ingrese el nombre del jugador " + (i + 1) + ":",
+                        "Nombre de jugador", JOptionPane.QUESTION_MESSAGE);
+                if (nombre == null) System.exit(0);
+                nombre = nombre.trim();
+            } while (nombre.isEmpty());
+
+            jugadores[i] = new Jugador(i, nombre);
+        }
+        return jugadores;
+    }
+
+    // --- Main para probar ---
+    public static void main(String[] args) {
+        int cantidad = VentanaJuego.pedirCantidadJugadores();
+        Jugador[] jugadores = VentanaJuego.pedirNombresJugadores(cantidad);
+        VentanaJuego ventana = new VentanaJuego(jugadores);
+
+        new Thread(() -> {
+            try {
+                Thread.sleep(2000);
+                ventana.actualizarValoresJugador(0, 5, 1200, 2, 1);
+                if (cantidad > 1) ventana.actualizarValoresJugador(1, 3, 1500, 1, 2);
+                Thread.sleep(2000);
+                ventana.actualizarValoresJugador(0, 6, 1300, 3, 2);
+                if (cantidad > 1) ventana.actualizarValoresJugador(1, 4, 1800, 2, 3);
+            } catch (InterruptedException e) { e.printStackTrace(); }
+        }).start();
     }
 }
