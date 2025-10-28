@@ -1,6 +1,6 @@
 package org.example;
 
-import org.example.GUI.GirarRuleta;
+//import org.example.GUI.GirarRuleta;
 
 import javax.swing.*;
 

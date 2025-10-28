@@ -1,6 +1,7 @@
 package org.example.model.Piezas.Cartas;
 
 import org.example.bd.ConexionBD;
+import org.example.model.Piezas.Carta;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,18 +10,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class CartaNaranja {
-    private int id;
+public class CartaNaranja extends Carta {
+
+    private int nivel;
     private String descripcion;
     private int precio_compra;
     private int precio_venta;
-    private int nivel;
+
 
     // ==========================
     // GETTERS Y SETTERS
     // ==========================
-    public int getId() {return id;}
-    public void setId(int id) {this.id = id;}
 
     public String getDescripcion() {return descripcion;}
     public void setDescripcion(String descripcion) {this.descripcion = descripcion;}
@@ -94,8 +94,6 @@ public class CartaNaranja {
 
        return carta;
 
-
    }
-
 
 }

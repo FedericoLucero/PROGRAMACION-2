@@ -1,18 +1,19 @@
 package org.example;
 
 import static org.example.GUI.InputsPaneles.*;
+import org.example.GUI.*;
+
 import static org.example.utils.ConsolaColor.*;
 
-import org.example.GUI.*;
+import org.example.model.Piezas.Ruleta;
+import org.example.utils.PantallaColor;
+
 import org.example.bd.ConexionBD;
+
 import org.example.model.Jugadores.*;
-import org.example.model.Piezas.Cartas.CartaAzul;
-import org.example.model.Piezas.Cartas.CartaNaranja;
-import org.example.model.Piezas.Cartas.CartaRoja;
+import org.example.model.Piezas.Cartas.*;
 import org.example.model.Piezas.Casilla;
 import org.example.model.Piezas.Tablero;
-import org.example.utils.PantallaColor;
-import org.example.utils.UserInput;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,11 +24,12 @@ public class Juego {
 
     private Jugador[] jugadores;
     private Tablero tablero = new Tablero();
-    private int cantJugadores;
-    private int cantMovimientosActuales = 0;
+    private Ruleta ruleta = new Ruleta();
+
+    private int cantMovActual;
     private int finJuego;
     private VentanaJuego ventanaJuego;
-    UserInput ui = new UserInput();
+
 
     public Juego() {}
 
@@ -39,13 +41,13 @@ public class Juego {
         boolean seguirPartida = true;
 
         do { // bucle principal de la partida
-            Jugador jugadorTurno = cambiarJugador(cantMovimientosActuales);
+            Jugador jugadorTurno = cambiarJugador(cantMovActual);
 
             // if que verifica que el jugador no esté en el final
             if (jugadorTurno.getPosicion() != tablero.getCantCasillas()) {
 
                 // metodo que calcula la siguiente posicion (teniendo en cuenta stops y fin del tablero)
-                int siguientePosicion = tablero.recorrerHastaSiguientePosicion(jugadorTurno,girarRuleta());
+                int siguientePosicion = tablero.recorrerHastaSiguientePosicion(jugadorTurno,ruleta.girarRuleta(ventanaJuego));
                 // verificamos que la posicion sea menor que el final
                 if (siguientePosicion < tablero.getCantCasillas()){
 
@@ -104,14 +106,13 @@ public class Juego {
                     finJuego -= 1;
                 }
 
-                ventanaJuego.actualizarValoresJugador(jugadorTurno.getId(), jugadorTurno.getPosicion(),
-                        jugadorTurno.getPatrimonio(), jugadorTurno.getCantidadCasas(), jugadorTurno.getCantidadFamiliares());
+                ventanaJuego.actualizarValoresJugador(jugadorTurno.getId(), jugadorTurno.getPosicion(), jugadorTurno.getPatrimonio(), jugadorTurno.getCantidadCasas(), jugadorTurno.getCantidadFamiliares());
 
                 if (finJuego == 0) {
                     seguirPartida = false;
                 }
             }
-            cantMovimientosActuales++;
+            cantMovActual++;
         } while (seguirPartida);
 
 
@@ -127,9 +128,11 @@ public class Juego {
     }
 
     public void inicializar() {
-        this.cantJugadores = pedirCantidadJugadores();
-        this.finJuego = cantJugadores;
-        this.jugadores = pedirNombresJugadores(cantJugadores);
+
+        this.jugadores = pedirNombresJugadores(pedirCantidadJugadores());
+        this.finJuego = jugadores.length;
+        this.cantMovActual = 0;
+
         this.ventanaJuego = new VentanaJuego(jugadores);
         for (Jugador jugador : jugadores) {
             jugador.insertar();  // aca se insertan los jugadores en la bd
@@ -142,14 +145,10 @@ public class Juego {
         return jugadorTurno;
     }
 
-    public int girarRuleta() {
-        return this.ventanaJuego.girarRuletaSync();
-    }
-
     public void accionAmarilla(Jugador jugadorTurno, int nivel) {
 
         VentanaCarta.mostrarCartaInformativa("Carta Amarilla", "Te tocó carta amarilla", "Debes girar la ruleta (1 a 5)", PantallaColor.AMARILLO);
-        switch (girarRuleta() % 5) {
+        switch (ruleta.girarRuleta(ventanaJuego) % 5) {
             case 1: accionAzul(jugadorTurno, nivel);
             break;
             case 2: accionRoja(jugadorTurno);
@@ -172,12 +171,8 @@ public class Juego {
 
 
         String[][] opciones = {
-                { "Profesión: " + profesion1.getTitulo(),
-                        "Salario: " + profesion1.getSueldo(),
-                        "Nivel: " + profesion1.getNivel()},
-                {"Profesión: " + profesion2.getTitulo(),
-                        "Salario: " + profesion2.getSueldo(),
-                        "Nivel: " + profesion2.getNivel()}
+                { "Profesión: " + profesion1.getTitulo(), "Salario: " + profesion1.getSueldo(), "Nivel: " + profesion1.getNivel()},
+                {"Profesión: " + profesion2.getTitulo(), "Salario: " + profesion2.getSueldo(), "Nivel: " + profesion2.getNivel()}
         };
         VentanaCarta ventana = new VentanaCarta("Elige una profesión", PantallaColor.AZUL, opciones);
         int seleccion = ventana.mostrarYEsperarSeleccion();
@@ -199,6 +194,9 @@ public class Juego {
         CartaRoja cartaRoja = CartaRoja.cartaRojaRandom();
         int deuda = cartaRoja.getValor();
         int patrimonio = jugadorTurno.getPatrimonio();
+
+        VentanaCarta.mostrarCartaInformativa("Carta roja", "Te tocó carta roja", "paga impuesto: " + deuda, PantallaColor.ROJO);
+
         int pago = patrimonio + deuda; //Sumo porque los valores enn tabla ya son negativos
 
         System.out.println("deuda "+deuda);
@@ -208,10 +206,11 @@ public class Juego {
     }
 
     public void accionVerde(Jugador jugadorTurno) {
-        VentanaCarta.mostrarCartaInformativa("Carta Verde", "Te tocó carta verde", "Cobra bono", PantallaColor.VERDE);
 
         int patrimonioActual = jugadorTurno.getPatrimonio();
         int bono = patrimonioActual + 1000;
+
+        VentanaCarta.mostrarCartaInformativa("Carta Verde", "Te tocó carta verde", "Cobra bono: " + 1000, PantallaColor.VERDE);
         jugadorTurno.actualizar("patrimonio", bono);
     }
 

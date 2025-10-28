@@ -1,6 +1,6 @@
 package org.example.model.NPCs;
 
-public class NPC {
+public abstract class NPC {
     private int id;
     private int puntos;
 

@@ -1,9 +1,8 @@
 package org.example.model.Piezas.Cartas;
 
-import org.example.model.Jugadores.Jugador;
-import org.example.model.Piezas.Tablero;
+import org.example.model.Piezas.Carta;
 
-public class CartaVerde {
+public class CartaVerde extends Carta {
 
 
 
