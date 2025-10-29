@@ -257,7 +257,10 @@ public class VentanaJuego extends JFrame {
                     timer.stop();
                     numeroRuleta = random.nextInt(10) + 1;
                     lblResultadoRuleta.setText("Número: " + numeroRuleta);
-                    btnGirarRuleta.setEnabled(true);
+                    // Notificar al hilo que espera el resultado
+                    synchronized (lock) {
+                        lock.notify();
+                    }
                 } else {
                     // Efecto de desaceleración
                     angulo += (10 * (1 - progreso));
@@ -268,62 +271,20 @@ public class VentanaJuego extends JFrame {
         timer.start();
     }
 
-    /**
-     * Método sincronizado que gira la ruleta visualmente y devuelve el número resultante.
-     * Bloquea hasta que el giro termina.
-     */
-    public int girarRuletaSync() {
-        // Si ya se está girando, no hacer nada
-        if (timer != null && timer.isRunning()) {
-            return -1;
-        }
+    public int esperarResultadoRuleta() {
+        btnGirarRuleta.setEnabled(true);
+        numeroRuleta = null; // Resetear el resultado anterior
 
-        // Crear un hilo que haga el giro y despierte cuando termina
-        final Object monitor = new Object();
-
-        btnGirarRuleta.setEnabled(false);
-        numeroRuleta = null;
-
-        int tiempoGiro = 2000 + random.nextInt(2000); // 2–4 segundos
-        int velocidad = 15; // milisegundos por frame
-
-        if (timer != null && timer.isRunning()) timer.stop();
-
-        timer = new Timer(velocidad, new ActionListener() {
-            long startTime = System.currentTimeMillis();
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                long elapsed = System.currentTimeMillis() - startTime;
-                double progreso = (double) elapsed / tiempoGiro;
-
-                if (progreso >= 1.0) {
-                    timer.stop();
-                    numeroRuleta = random.nextInt(10) + 1;
-                    lblResultadoRuleta.setText("Número: " + numeroRuleta);
-                    btnGirarRuleta.setEnabled(true);
-                    synchronized (monitor) {
-                        monitor.notify(); // Despierta el hilo que espera
-                    }
-                } else {
-                    angulo += (10 * (1 - progreso));
-                    panelRuletaAnimada.repaint();
-                }
-            }
-        });
-        timer.start();
-
-        // Esperar hasta que termine
-        synchronized (monitor) {
+        synchronized (lock) {
             while (numeroRuleta == null) {
                 try {
-                    monitor.wait();
-                } catch (InterruptedException ex) {
+                    lock.wait(); // Esperar a que la ruleta termine de girar
+                } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
+                    return -1; // Salir si el hilo es interrumpido
                 }
             }
         }
-
         return numeroRuleta;
     }
 
