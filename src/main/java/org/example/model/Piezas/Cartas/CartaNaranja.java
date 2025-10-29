@@ -35,7 +35,7 @@ public class CartaNaranja extends Carta {
     public void setNivel(int nivel) {this.nivel = nivel;}
 
     // ==========================
-    // METODOS PROPIOS
+    // METODOS logicos
     // ==========================
 
 
