@@ -215,12 +215,18 @@ public class Juego {
     }
 
     public void accionRosa() {
+        CartaRosa carta = new CartaRosa();
+        List<Integer> ids = carta.obtenerRandom();
+
+        CartaRosa c1 = CartaRosa.buscarCartaId(ids.get(0));
+        CartaRosa c2 = CartaRosa.buscarCartaId(ids.get(0));
+        CartaRosa c3 = CartaRosa.buscarCartaId(ids.get(0));
 
         String[][] opcionesRosa = {
-                {"Mascota: Perro", "Edad: 2 años", "Raza: Labrador"},
-                {"Pareja: Ana", "Edad: 28", "Profesión: Abogada"},
-                {"Hijo: Juan", "Edad: 5", "Escuela: Primaria"}};
-
+                {"Accion: " + c1.getTipo() + c1.getDescripcion() + "Esta accion cuesta: " + c1.getCosto()},
+                {"Accion: " + c2.getTipo() + c2.getDescripcion() + "Esta accion cuesta: " + c2.getCosto()},
+                {"Accion: " + c3.getTipo() + c3.getDescripcion() + "Esta accion cuesta: " + c3.getCosto()}
+            };
         VentanaCarta ventana = new VentanaCarta("Elige tu opción", PantallaColor.ROSA, opcionesRosa);
         int eleccion = ventana.mostrarYEsperarSeleccion();
 

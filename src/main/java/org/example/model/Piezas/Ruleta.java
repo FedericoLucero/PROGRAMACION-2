@@ -7,6 +7,6 @@ public class Ruleta {
     public Ruleta() {}
 
     public int girarRuleta(VentanaJuego ventanaJuego) {
-        return ventanaJuego.girarRuletaSync();
+        return ventanaJuego.esperarResultadoRuleta();
     }
 }
