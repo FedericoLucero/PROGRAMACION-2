@@ -3,8 +3,7 @@ package org.example.model.Jugadores;
 import org.example.bd.ConexionBD;
 import org.example.model.Bienes.Casa;
 import org.example.model.NPCs.NPC;
-import org.example.model.Piezas.Cartas.CartaAzul;
-import org.example.model.Piezas.Cartas.CartaNaranja;
+import org.example.model.Piezas.Cartas.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,16 +14,17 @@ import java.util.ArrayList;
 public class Jugador {
     private int id_jugador;
     private String nombre;
-    private CartaAzul profesion;
+    private int posicion;
+
+    private ArrayList<NPC> familia; // todo esto ya no srive?
+    private ArrayList<Casa> casas; // todo esta ya no srive?
 
     private int patrimonio;
-    private ArrayList<NPC> familia;
-    private ArrayList<Casa> casas;
-
-    private int posicion;
     private int estado_civil; // 0/1 porque sqlite no tiene booleano
     private int hijos;
     private int deuda;
+
+    private CartaAzul profesion;
     private CartaNaranja casa;
 
 
@@ -189,7 +189,6 @@ public class Jugador {
         }
     }
 
-    /** Actualiza campos tipo int */
     /** Actualiza campos tipo int */
     public boolean actualizar(String campo, int nuevoValor) {
         String sql;

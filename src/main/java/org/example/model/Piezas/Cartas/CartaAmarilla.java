@@ -1,4 +1,7 @@
 package org.example.model.Piezas.Cartas;
 
-public class CartaAmarilla {
+import org.example.model.Piezas.Carta;
+
+public class CartaAmarilla extends Carta {
+
 }

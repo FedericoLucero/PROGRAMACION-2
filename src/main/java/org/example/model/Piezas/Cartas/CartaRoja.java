@@ -1,23 +1,21 @@
 package org.example.model.Piezas.Cartas;
 
 import org.example.bd.ConexionBD;
+import org.example.model.Piezas.Carta;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Random;
 
-public class CartaRoja {
-    private int id;
+public class CartaRoja extends Carta {
+
     private String descripcion;
     private int valor;
 
     // ==========================
     // GETTERS Y SETTERS
     // ==========================
-
-    public int getId() {return id;}
-    public void setId(int id) {this.id = id;}
 
     public String getDescripcion() {return descripcion;}
     public void setDescripcion(String descripcion) {this.descripcion = descripcion;}

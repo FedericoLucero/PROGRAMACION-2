@@ -1,6 +1,7 @@
 package org.example.model.Piezas.Cartas;
 
 import org.example.bd.ConexionBD;
+import org.example.model.Piezas.Carta;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,19 +9,15 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CartaAzul {
-   private int id;
+public class CartaAzul extends Carta {
+
    private int nivel;
    private String titulo;
    private int sueldo;
 
-
     // ==========================
     // GETTERS Y SETTERS
     // ==========================
-
-    public int getId() {return id;}
-    public void setId(int id) {this.id = id;}
 
     public int getNivel() {return nivel;}
     public void setNivel(int nivel) {this.nivel = nivel;}
@@ -55,6 +52,7 @@ public class CartaAzul {
         }
         return ids;
     }
+
     /*
     BuscarCartaId(id_casa): Busca en la bd la casa con el id del argumento y crea un objeto de tipo CartaAzul(profesion)
     del que pueden consultarse propiedades usando getters y setters

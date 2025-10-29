@@ -9,7 +9,6 @@ import java.util.Random;
 public class Casilla {
     private int id;
     private String color;
-    private static String url_static = "jdbc:sqlite:BD_LIFE_STATIC.sqlite";
 
     // ==========================
     // CONSTRUCTORES
@@ -34,7 +33,7 @@ public class Casilla {
     public static String obtenerColorCasillaPorId(int idCasilla) {
         String query = "SELECT id_casilla, color FROM Casillas WHERE id_casilla = " + idCasilla;
 
-        try (Connection conn = DriverManager.getConnection(url_static);
+        try (Connection conn = DriverManager.getConnection(ConexionBD.url_estatica);
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
 

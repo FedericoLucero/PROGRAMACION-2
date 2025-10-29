@@ -1,5 +1,6 @@
 package org.example.model.Piezas;
 
+import org.example.bd.ConexionBD;
 import org.example.model.Jugadores.Jugador;
 import org.example.utils.*;
 
@@ -7,7 +8,6 @@ import java.sql.*;
 
 public class Tablero {
 
-    protected String url_static = "jdbc:sqlite:BD_LIFE_STATIC.sqlite";
     private int cantCasillas;
 
     // ==========================
@@ -41,7 +41,7 @@ public class Tablero {
 
         String query = "SELECT id_casilla, color FROM Casillas WHERE id_casilla > ? ORDER BY id_casilla LIMIT ?";
 
-        try (Connection conn = DriverManager.getConnection(url_static);
+        try (Connection conn = DriverManager.getConnection(ConexionBD.url_estatica);
              PreparedStatement pstmt = conn.prepareStatement(query)) {
 
             pstmt.setInt(1, posicionAnterior);
@@ -92,7 +92,7 @@ public class Tablero {
      */
     public int contarCasillas() {
         String query = "SELECT COUNT(*) AS total FROM " + "Tablero";
-        try (Connection conn = DriverManager.getConnection(url_static);
+        try (Connection conn = DriverManager.getConnection(ConexionBD.url_estatica);
              PreparedStatement stmt = conn.prepareStatement(query);
              ResultSet rs = stmt.executeQuery()) {
 
@@ -115,7 +115,7 @@ public class Tablero {
 
         System.out.println("\n=== TABLERO ===\n");
 
-        try (Connection conn = DriverManager.getConnection(url_static);
+        try (Connection conn = DriverManager.getConnection(ConexionBD.url_estatica);
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
 
