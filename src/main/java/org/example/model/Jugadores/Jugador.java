@@ -26,7 +26,7 @@ public class Jugador {
 
     private CartaAzul profesion;
     private CartaNaranja casa;
-
+    private int mascota;
 
 
     // ==========================
@@ -121,6 +121,13 @@ public class Jugador {
     public CartaNaranja getCasa() {return casa;}
     public void setCasa(CartaNaranja casa) {this.casa = casa;}
 
+    public int getMascota() {
+        return mascota;
+    }
+
+    public void setMascota(int mascota) {
+        this.mascota = mascota;
+    }
     // ==========================
     // METODOS DE BD
     // ==========================

@@ -44,7 +44,7 @@ public class CartaRosa extends Carta {
     public void setCosto(int costo) {this.costo = costo;}
 
     public List<Integer> obtenerRandom(){
-        String sqlBuscar = "SELECT * FROM CartaNaranja ORDER BY RANDOM() LIMIT 3";
+        String sqlBuscar = "SELECT * FROM CartaRosa ORDER BY RANDOM() LIMIT 3";
         List<Integer> ids = new ArrayList<>();
         try(Connection conn = new ConexionBD(ConexionBD.url_estatica).getConnection();
             PreparedStatement stmt = conn.prepareStatement(sqlBuscar)){
