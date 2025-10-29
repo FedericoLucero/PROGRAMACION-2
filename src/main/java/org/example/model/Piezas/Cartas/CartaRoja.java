@@ -28,9 +28,9 @@ public class CartaRoja extends Carta {
 
     public static CartaRoja cartaRojaRandom(){
         Random rdm = new Random();
-        int carta_random = rdm.nextInt(1,10);
+        int carta_random = rdm.nextInt(0,10);
         String sql = "SELECT * FROM CartaRoja WHERE id = ?";
-        CartaRoja carta = null;
+        CartaRoja carta = new CartaRoja();
         try (Connection conn = new ConexionBD(ConexionBD.url_estatica).getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 

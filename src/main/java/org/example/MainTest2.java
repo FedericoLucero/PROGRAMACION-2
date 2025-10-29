@@ -2,6 +2,8 @@ package org.example;
 
 //import org.example.GUI.GirarRuleta;
 
+import org.example.model.Piezas.Cartas.CartaRoja;
+
 import javax.swing.*;
 
 public class MainTest2 {
@@ -41,6 +43,8 @@ public class MainTest2 {
 
         } while (jugarDeNuevo);
         System.out.println("=== JUEGO TERMINADO ===");
+//
+
 
     }
 

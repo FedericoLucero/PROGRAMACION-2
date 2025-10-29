@@ -78,7 +78,7 @@ public class Juego {
                             break;
                         case "rosa":
                             ventanaJuego.setDescripcion("Caiste en una casilla ROSA", " Posición: " + siguientePosicion, PantallaColor.ROSA);
-                            accionRosa();
+                            accionRosa(jugadorTurno);
                             break;
                         case "naranja":
                             ventanaJuego.setDescripcion("Caiste en una casilla NARANJA", " Posición: " + siguientePosicion, PantallaColor.NARANJA);
@@ -90,7 +90,7 @@ public class Juego {
                             break;
                         case "stopRosa":
                             ventanaJuego.setDescripcion("Caiste en una casilla STOP ROSA", " Posición: " + siguientePosicion, PantallaColor.BLANCO);
-                            accionRosa();
+                            accionRosa(jugadorTurno);
                             break;
                         case "stopNaranja":
                             ventanaJuego.setDescripcion("Caiste en una casilla STOP NARANJA", " Posición: " + siguientePosicion, PantallaColor.BLANCO);
@@ -155,7 +155,7 @@ public class Juego {
             break;
             case 3: accionVerde(jugadorTurno);
             break;
-            case 4: accionRosa();
+            case 4: accionRosa(jugadorTurno);
             break;
             case 5: accionNaranja(jugadorTurno, nivel);
             break;
@@ -214,28 +214,76 @@ public class Juego {
         jugadorTurno.actualizar("patrimonio", bono);
     }
 
-    public void accionRosa() {
+
+    public void accionRosa(Jugador jugadorTurno) {
         CartaRosa carta = new CartaRosa();
         List<Integer> ids = carta.obtenerRandom();
 
         CartaRosa c1 = CartaRosa.buscarCartaId(ids.get(0));
-        CartaRosa c2 = CartaRosa.buscarCartaId(ids.get(0));
-        CartaRosa c3 = CartaRosa.buscarCartaId(ids.get(0));
+        CartaRosa c2 = CartaRosa.buscarCartaId(ids.get(1));
+        CartaRosa c3 = CartaRosa.buscarCartaId(ids.get(2));
 
         String[][] opcionesRosa = {
-                {"Accion: " + c1.getTipo() + c1.getDescripcion() + "Esta accion cuesta: " + c1.getCosto()},
-                {"Accion: " + c2.getTipo() + c2.getDescripcion() + "Esta accion cuesta: " + c2.getCosto()},
-                {"Accion: " + c3.getTipo() + c3.getDescripcion() + "Esta accion cuesta: " + c3.getCosto()}
-            };
+                {"Accion: " + c1.getTipo() + "\n" + c1.getDescripcion() + "\n" + "Esta accion cuesta: " + c1.getCosto()},
+                {"Accion: " + c2.getTipo() + "\n" + c2.getDescripcion() + "\n" + "Esta accion cuesta: " + c2.getCosto()},
+                {"Accion: " + c3.getTipo() + "\n" + c3.getDescripcion() + "\n" + "Esta accion cuesta: " + c3.getCosto()}
+        };
+
         VentanaCarta ventana = new VentanaCarta("Elige tu opción", PantallaColor.ROSA, opcionesRosa);
-        int eleccion = ventana.mostrarYEsperarSeleccion();
+        int seleccion = ventana.mostrarYEsperarSeleccion();
+        //Segun seleccion guardo carta, porque el tipo de carta rosa cambia diferentes campos en jugador
+        CartaRosa cartaElegida = switch (seleccion) {
+            case 1 -> c1;
+            case 2 -> c2;
+            case 3 -> c3;
+            default -> null;
+        };
 
+        if (cartaElegida == null) return;
 
+        // Resto el costo de la accion
+        jugadorTurno.setPatrimonio(jugadorTurno.getPatrimonio() - cartaElegida.getCosto());
 
-        // todo acción de que te toque familia
+        // Actualizo campos dependiendo del tipos
+        switch (cartaElegida.getTipo()) {
+            case "Adoptar":
+                if (cartaElegida.getDescripcion().equalsIgnoreCase("Mellisos")) {
+                    jugadorTurno.setHijos(jugadorTurno.getHijos() + 2);
+                } else {
+                    jugadorTurno.setHijos(jugadorTurno.getHijos() + 1);
+                }
+                break;
 
+            case "Casarse":
+                jugadorTurno.setEstado_civil(1); // 1 casado 0 no
+                break;
 
+            case "Adoptar Mascota":
+                if (cartaElegida.getDescripcion().equalsIgnoreCase("Gato")) {
+                    jugadorTurno.setMascota(1); // 1 gato
+                } else {
+                    jugadorTurno.setMascota(2); // 2 perro
+                }
+                break;
+        }
+
+        //Actualizo bd dinamica
+        String sql = "UPDATE jugador SET patrimonio=?, hijos=?, estado_civil=?, mascota=? WHERE id_jugador=?";
+        try (Connection conn = new ConexionBD(ConexionBD.url_dinamica).getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, jugadorTurno.getPatrimonio());
+            stmt.setInt(2, jugadorTurno.getHijos());
+            stmt.setInt(3, jugadorTurno.getEstado_civil());
+            stmt.setInt(4, jugadorTurno.getMascota());
+            stmt.setInt(5, jugadorTurno.getId());
+            stmt.executeUpdate();
+
+        } catch (Exception e) {
+            System.out.println("Error al actualizar jugador con carta rosa: " + e.getMessage());
+        }
     }
+
 
     public void accionNaranja(Jugador jugadorTurno, int nivel) {
         CartaNaranja casa = new CartaNaranja();
