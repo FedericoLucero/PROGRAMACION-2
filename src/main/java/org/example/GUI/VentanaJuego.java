@@ -160,8 +160,13 @@ public class VentanaJuego extends JFrame {
             panelJugador.add(lblDolar);
             panelJugador.add(Box.createRigidArea(new Dimension(5, 0)));
 
+            JLabel lblDeuda = new JLabel("-💲: [00]");
+            labelsJugadores[i][2] = lblDeuda;
+            panelJugador.add(lblDeuda);
+            panelJugador.add(Box.createRigidArea(new Dimension(5, 0)));
+
             JLabel lblProfesion = new JLabel("🎓: [Ninguna]");
-            labelsJugadores[i][2] = lblProfesion;
+            labelsJugadores[i][3] = lblProfesion;
             panelJugador.add(lblProfesion);
 
             panelInfo.add(panelJugador);
@@ -290,7 +295,8 @@ public class VentanaJuego extends JFrame {
 
         labelsJugadores[indice][0].setText("Pos: [" + String.format("%02d", posicion) + "]");
         labelsJugadores[indice][1].setText("💲: [" + jugador.getPatrimonio() + "]");
-        labelsJugadores[indice][2].setText("🎓: [" + (jugador.getProfesion() != null ? jugador.getProfesion().getTitulo() : "Ninguna") + "]");
+        labelsJugadores[indice][2].setText("-💲: [" + jugador.getDeuda() + "]");
+        labelsJugadores[indice][3].setText("🎓: [" + (jugador.getProfesion() != null ? jugador.getProfesion().getTitulo() : "Ninguna") + "]");
     }
 
 
