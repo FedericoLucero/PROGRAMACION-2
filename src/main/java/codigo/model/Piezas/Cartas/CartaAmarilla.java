@@ -27,7 +27,7 @@ public class CartaAmarilla extends Carta {
 
         VentanaCarta.mostrarCartaInformativa("Carta Amarilla", "Te tocó carta amarilla", "Debes girar la ruleta (1 a 5)", PantallaColor.AMARILLO);
 
-        int resultado = ruleta.girarRuleta(ventanaJuego) % 5 + 1;
+        int resultado = (ruleta.girarRuleta(ventanaJuego) % 5 ) + 1;
         System.out.println(resultado);
         Carta carta;
         switch (resultado) {
@@ -41,7 +41,6 @@ public class CartaAmarilla extends Carta {
         }
 
         if (carta != null) {
-            System.out.println("laaaa cartaaaa es nuellaaaaa");
             carta.accion(jugadorTurno); // Polimorfismo
         }
     }
