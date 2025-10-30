@@ -301,6 +301,8 @@ public class Juego {
     public static void cobrarCosto(Jugador jugador, int costo) {
         int patrimonioActual = jugador.getPatrimonio();
 
+        costo = (costo < 0) ? -costo : costo;
+
         if (patrimonioActual < costo) {
             int deuda = costo - patrimonioActual;
             jugador.actualizar("patrimonio", 0);
