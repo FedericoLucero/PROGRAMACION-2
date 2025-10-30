@@ -16,8 +16,8 @@ public class Jugador {
     private String nombre;
     private int posicion;
 
-    private ArrayList<NPC> familia; // todo esto ya no srive? // ES MUY DIFICIL DE IMPLEMENTAR ASI Q NO
-    private ArrayList<Casa> casas; // todo esta ya no srive?
+    private ArrayList<NPC> familia;
+    private ArrayList<Casa> casas;
 
     private int patrimonio;
     private int estado_civil; // 0/1 porque sqlite no tiene booleano
@@ -49,7 +49,10 @@ public class Jugador {
         this.deuda = 0;
     }
 
-    public  Jugador(){};
+    public Jugador() {
+    }
+
+    ;
 
     public Jugador(String nombre) {
         this(0, nombre);
@@ -73,14 +76,14 @@ public class Jugador {
         setPatrimonio(this.patrimonio + sueldo);
     }
 
-    public int getCantidadFamiliares(){
+    public int getCantidadFamiliares() {
         if (familia != null) {
             return familia.size();
         }
         return 0;
     }
 
-    public int getCantidadCasas(){
+    public int getCantidadCasas() {
         if (casas != null) {
             return casas.size();
         }
@@ -92,32 +95,33 @@ public class Jugador {
     // GETTERS Y SETTERS
     // ==========================
 
-    public int getId() { return id_jugador; }
-    public void setId(int id) { this.id_jugador = id; }
+    public int getId() {return id_jugador;}
+    public void setId(int id) {this.id_jugador = id;}
 
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
+    public String getNombre() {return nombre;}
+    public void setNombre(String nombre) {this.nombre = nombre;}
 
-    public CartaAzul getProfesion() { return profesion; }
-    public void setProfesion(CartaAzul profesion) { this.profesion = profesion; }
+    public CartaAzul getProfesion() {return profesion;}
+    public void setProfesion(CartaAzul profesion) {this.profesion = profesion;}
 
-    public int getPatrimonio() { return patrimonio; }
-    public void setPatrimonio(int patrimonio) { this.patrimonio = patrimonio; }
+    public int getPatrimonio() {return patrimonio;}
+    public void setPatrimonio(int patrimonio) {this.patrimonio = patrimonio;}
 
-    public ArrayList<NPC> getFamilia() { return familia; }
-    public void setFamilia(ArrayList<NPC> familia) { this.familia = familia; }
+    public ArrayList<NPC> getFamilia() {return familia;}
 
-    public int getPosicion() { return posicion; }
-    public void setPosicion(int posicion) { this.posicion = posicion; }
+    public void setFamilia(ArrayList<NPC> familia) {this.familia = familia;}
 
-    public int getEstado_civil() { return estado_civil; }
-    public void setEstado_civil(int estado_civil) { this.estado_civil = estado_civil; }
+    public int getPosicion() {return posicion;}
+    public void setPosicion(int posicion) {this.posicion = posicion;}
 
-    public int getHijos() { return hijos; }
-    public void setHijos(int hijos) { this.hijos = hijos; }
+    public int getEstado_civil() {return estado_civil;}
+    public void setEstado_civil(int estado_civil) {this.estado_civil = estado_civil;}
 
-    public int getDeuda() { return deuda; }
-    public void setDeuda(int deuda) { this.deuda = deuda; }
+    public int getHijos() {return hijos;}
+    public void setHijos(int hijos) {this.hijos = hijos;}
+
+    public int getDeuda() {return deuda;}
+    public void setDeuda(int deuda) {this.deuda = deuda;}
 
     public CartaNaranja getCasa() {return casa;}
     public void setCasa(CartaNaranja casa) {this.casa = casa;}
@@ -136,7 +140,9 @@ public class Jugador {
     // METODOS DE BD
     // ==========================
 
-    /** Inserta el jugador actual en la BD */
+    /**
+     * Inserta el jugador actual en la BD
+     */
     public void insertar() {
         String sqlInsertar = "INSERT INTO jugador (nombre, patrimonio, posicion, estado_civil, hijos, deudas) "
                 + "VALUES (?, ?, ?, ?, ?, ?)";
@@ -173,7 +179,9 @@ public class Jugador {
         }
     }
 
-    /** Actualiza campos tipo String */
+    /**
+     * Actualiza campos tipo String
+     */
     public boolean actualizar(String campo, String nuevoValor) {
         String sql;
         switch (campo) {
@@ -200,7 +208,9 @@ public class Jugador {
         }
     }
 
-    /** Actualiza campos tipo int */
+    /**
+     * Actualiza campos tipo int
+     */
     public boolean actualizar(String campo, int nuevoValor) {
         String sql;
         switch (campo) {
@@ -252,6 +262,7 @@ public class Jugador {
     /** Busca un jugador por id en la BD y actualiza el objeto actual
      * Para profesion y casa utiliza los campos profesion y objeto que contienen ids que refieren a los ids de las tablas que les corresponden
      * */
+/*
     public static Jugador buscarJugadorPorId(int idJugador) {
         String sql = "SELECT * FROM jugador WHERE id_jugador = ?";
         Jugador jugador = null;
@@ -293,6 +304,8 @@ public class Jugador {
 
         return jugador;
     }
+
+ */
 
 
 }

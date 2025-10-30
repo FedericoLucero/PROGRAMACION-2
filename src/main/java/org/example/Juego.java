@@ -3,8 +3,6 @@ package org.example;
 import static org.example.GUI.InputsPaneles.*;
 import org.example.GUI.*;
 
-import static org.example.utils.ConsolaColor.*;
-
 import org.example.model.Piezas.Carta;
 import org.example.model.Piezas.Ruleta;
 import org.example.utils.PantallaColor;
@@ -19,7 +17,6 @@ import org.example.model.Piezas.Tablero;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.List;
 
 public class Juego {
 
@@ -49,73 +46,45 @@ public class Juego {
 
                 // metodo que calcula la siguiente posicion (teniendo en cuenta stops y fin del tablero)
                 int siguientePosicion = tablero.recorrerHastaSiguientePosicion(jugadorTurno,ruleta.girarRuleta(ventanaJuego));
+
                 // verificamos que la posicion sea menor que el final
                 if (siguientePosicion < tablero.getCantCasillas()){
 
-                    // metodo que mueve al jugador a la posicion calculada previamente
                     jugadorTurno.moverJugador(siguientePosicion);
 
-                    //Obtener nivel
+                    // obtenemos el color de la casilla
+                    String color = Casilla.obtenerColorCasillaPorId(siguientePosicion);
+
+                    // Mostramos información en pantalla
+                    ventanaJuego.setDescripcion("Caiste en una casilla " + color.toUpperCase(), "Posición: " + siguientePosicion, PantallaColor.obtenerColor(color));
+
+                    // Obtener nivel de carta
                     int nivel = tablero.obtenerTercio(siguientePosicion);
 
-                    // switch con metodo que retorna el color de la casilla
-                    switch (Casilla.obtenerColorCasillaPorId(siguientePosicion)) {
-
-                        case "amarilla":
-                            ventanaJuego.setDescripcion("Caiste en una casilla AMARILLO", " Posición: " + siguientePosicion, PantallaColor.AMARILLO);
-                            accionAmarilla(jugadorTurno, nivel);
-                            break;
-                        case "azul":
-                            ventanaJuego.setDescripcion("Caiste en una casilla AZUL", " Posición: " + siguientePosicion, PantallaColor.AZUL);
-                            accionAzul(jugadorTurno, nivel);
-                            break;
-                        case "roja":
-                            ventanaJuego.setDescripcion("Caiste en una casilla ROJA"," Posición: "+ siguientePosicion, PantallaColor.ROJO);
-                            accionRoja(jugadorTurno);
-                            break;
-                        case "verde":
-                            ventanaJuego.setDescripcion("Caiste en una casilla VERDE", " Posición: " + siguientePosicion, PantallaColor.VERDE);
-                            accionVerde(jugadorTurno);
-                            break;
-                        case "rosa":
-                            ventanaJuego.setDescripcion("Caiste en una casilla ROSA", " Posición: " + siguientePosicion, PantallaColor.ROSA);
-                            accionRosa(jugadorTurno);
-                            break;
-                        case "naranja":
-                            ventanaJuego.setDescripcion("Caiste en una casilla NARANJA", " Posición: " + siguientePosicion, PantallaColor.NARANJA);
-                            accionNaranja(jugadorTurno, nivel);
-                            break;
-                        case "stopAzul":
-                            ventanaJuego.setDescripcion("Caiste en una casilla STOP AZUL", " Posición: " + siguientePosicion, PantallaColor.BLANCO);
-                            accionAzul(jugadorTurno, nivel);
-                            break;
-                        case "stopRosa":
-                            ventanaJuego.setDescripcion("Caiste en una casilla STOP ROSA", " Posición: " + siguientePosicion, PantallaColor.BLANCO);
-                            accionRosa(jugadorTurno);
-                            break;
-                        case "stopNaranja":
-                            ventanaJuego.setDescripcion("Caiste en una casilla STOP NARANJA", " Posición: " + siguientePosicion, PantallaColor.BLANCO);
-                            accionNaranja(jugadorTurno, nivel);
-                            break;
-                        default:
-                            System.out.println(GRIS + "Color no reconocido: Posición: " + siguientePosicion + RESET);
-                            break;
+                    // plicamos polimorfismo
+                    Carta carta = crearCartaPorColor(color, nivel);
+                    if (carta != null) {
+                        carta.accion(jugadorTurno); // polimorfismo
                     }
+
                 } else {
-                    ventanaJuego.setDescripcion("llegaste al final", " Posición: " + siguientePosicion, PantallaColor.BLANCO);
+                    ventanaJuego.setDescripcion("¡Llegaste al final!", "Posición: " + siguientePosicion, PantallaColor.BLANCO);
                     jugadorTurno.moverJugador(tablero.getCantCasillas());
                     finJuego -= 1;
                 }
 
-                ventanaJuego.actualizarValoresJugador(jugadorTurno.getId(), jugadorTurno.getPosicion(), jugadorTurno.getPatrimonio(), jugadorTurno.getCantidadCasas(), jugadorTurno.getCantidadFamiliares());
+                ventanaJuego.actualizarDatosJugador(jugadores,cantMovActual % jugadores.length, siguientePosicion);
 
                 if (finJuego == 0) {
                     seguirPartida = false;
                 }
             }
+
             cantMovActual++;
+
         } while (seguirPartida);
-        finalizar();
+
+        finalizar(); // deternima quien es el ganador
 
         // variable para finalizar juego
         boolean fin = jugarDeNuevo();
@@ -146,10 +115,23 @@ public class Juego {
         return jugadorTurno;
     }
 
+    private Carta crearCartaPorColor(String color, int nivel) {
+        return switch (color.toLowerCase()) {
+            case "amarilla" -> new CartaAmarilla(tablero, ruleta, ventanaJuego);
+            case "azul", "stopazul" -> new CartaAzul(nivel);
+            case "roja" -> new CartaRoja();
+            case "verde" -> new CartaVerde();
+            case "rosa", "stoprosa" -> new CartaRosa();
+            case "naranja", "stopnaranja" -> new CartaNaranja(nivel);
+            default -> null;
+        };
+    }
+
+/*
     public void accionAmarilla(Jugador jugadorTurno, int nivel) {
 
         VentanaCarta.mostrarCartaInformativa("Carta Amarilla", "Te tocó carta amarilla", "Debes girar la ruleta (1 a 5)", PantallaColor.AMARILLO);
-        switch (ruleta.girarRuleta(ventanaJuego) % 5) {
+        switch (ruleta.girarRuleta(ventanaJuego) % 5 + 1) {
             case 1: accionAzul(jugadorTurno, nivel);
             break;
             case 2: accionRoja(jugadorTurno);
@@ -308,13 +290,15 @@ public class Juego {
 
     }
 
-    public void agregarDeuda(Jugador jugador, int monto) {
+ */
+
+    public static void agregarDeuda(Jugador jugador, int monto) {
         int deudaActual = jugador.getDeuda();
         int nuevaDeuda = deudaActual + monto;
         jugador.actualizar("deudas", nuevaDeuda);
     }
 
-    public void cobrarCosto(Jugador jugador, int costo) {
+    public static void cobrarCosto(Jugador jugador, int costo) {
         int patrimonioActual = jugador.getPatrimonio();
 
         if (patrimonioActual < costo) {
@@ -353,13 +337,7 @@ public class Juego {
             int patrimonio = jugador.getPatrimonio(); // dinero en mano
             int resultadoFinal = ganancia + patrimonio - deuda;
 
-            System.out.println(
-                    "Jugador: " + jugador.getNombre() +
-                            " | Ganancia: " + ganancia +
-                            " | Patrimonio: " + patrimonio +
-                            " | Deuda: " + deuda +
-                            " | Resultado Final: " + resultadoFinal
-            );
+            System.out.println("Jugador: " + jugador.getNombre() + " | Ganancia: " + ganancia + " | Patrimonio: " + patrimonio + " | Deuda: " + deuda + " | Resultado Final: " + resultadoFinal);
 
             // Actualizamos el jugador ganador
             if (resultadoFinal > mayorResultado) {
@@ -370,12 +348,7 @@ public class Juego {
 
         if (ganador != null) {
             System.out.println("\n🏆 El ganador es: " + ganador.getNombre() + " con un total de " + mayorResultado);
-            VentanaCarta.mostrarCartaInformativa(
-                    "Fin del Juego",
-                    "¡Ganador!",
-                    "El jugador " + ganador.getNombre() + " obtuvo el mayor patrimonio neto: " + mayorResultado,
-                    PantallaColor.VERDE
-            );
+            VentanaCarta.mostrarCartaInformativa("Fin del Juego", "¡Ganador!", "El jugador " + ganador.getNombre() + " obtuvo el mayor patrimonio neto: " + mayorResultado, PantallaColor.VERDE);
         } else {
             System.out.println("\nNo se pudo determinar un ganador.");
         }

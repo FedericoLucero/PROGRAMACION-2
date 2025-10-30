@@ -1,5 +1,6 @@
 package org.example.GUI;
 
+import org.example.bd.ConexionBD;
 import org.example.model.Jugadores.Jugador;
 
 import javax.imageio.ImageIO;
@@ -10,6 +11,10 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Random;
 
 public class VentanaJuego extends JFrame {
@@ -32,11 +37,12 @@ public class VentanaJuego extends JFrame {
     private JPanel[] panelesJugadores;
     private JLabel[][] labelsJugadores;
 
-    // 🔹 Variables de la ruleta animada
+    //  Variables de la ruleta animada
     private BufferedImage imagenRuleta;
     private double angulo = 0;
     private Timer timer;
     private RuletaPanel panelRuletaAnimada;
+
 
     public VentanaJuego(Jugador[] nombresJugadores) {
         setTitle("Juego Life - Ventana Principal");
@@ -58,7 +64,6 @@ public class VentanaJuego extends JFrame {
     }
 
     // ---------------------------------------------------------------------
-    // 🔸 Carga imágenes de tablero y ruleta
     private void cargarImagenes() {
         try {
             // Carga ruleta desde recursos o ruta
@@ -155,18 +160,8 @@ public class VentanaJuego extends JFrame {
             panelJugador.add(lblDolar);
             panelJugador.add(Box.createRigidArea(new Dimension(5, 0)));
 
-            JLabel lblCasa = new JLabel("🏠: [00]");
-            labelsJugadores[i][2] = lblCasa;
-            panelJugador.add(lblCasa);
-            panelJugador.add(Box.createRigidArea(new Dimension(5, 0)));
-
-            JLabel lblFamilia = new JLabel("👪: [00]");
-            labelsJugadores[i][3] = lblFamilia;
-            panelJugador.add(lblFamilia);
-            panelJugador.add(Box.createRigidArea(new Dimension(5, 0)));
-
             JLabel lblProfesion = new JLabel("🎓: [Ninguna]");
-            labelsJugadores[i][4] = lblProfesion;
+            labelsJugadores[i][2] = lblProfesion;
             panelJugador.add(lblProfesion);
 
             panelInfo.add(panelJugador);
@@ -210,7 +205,7 @@ public class VentanaJuego extends JFrame {
     }
 
     // ---------------------------------------------------------------------
-    // 🔸 Aquí está la ruleta animada integrada
+    // Aquí está la ruleta animada integrada
     private JPanel construirPanelRuleta() {
         JPanel panel = new JPanel(new BorderLayout(5, 5));
         panel.setBorder(BorderFactory.createTitledBorder("Ruleta"));
@@ -236,7 +231,7 @@ public class VentanaJuego extends JFrame {
     }
 
     // ---------------------------------------------------------------------
-    // 🔸 Gira visualmente la ruleta y calcula número
+    //  Gira visualmente la ruleta y calcula número
     private void girarRuletaAnimada() {
         btnGirarRuleta.setEnabled(false);
 
@@ -288,9 +283,20 @@ public class VentanaJuego extends JFrame {
         return numeroRuleta;
     }
 
+    public void actualizarDatosJugador(Jugador[] jugadores, int indice, int posicion) {
+        if (indice < 0 || indice >= jugadores.length) return;
+
+        Jugador jugador = jugadores[indice];
+
+        labelsJugadores[indice][0].setText("Pos: [" + String.format("%02d", posicion) + "]");
+        labelsJugadores[indice][1].setText("💲: [" + jugador.getPatrimonio() + "]");
+        labelsJugadores[indice][2].setText("🎓: [" + (jugador.getProfesion() != null ? jugador.getProfesion().getTitulo() : "Ninguna") + "]");
+    }
+
+
 
     // ---------------------------------------------------------------------
-    // 🔹 Panel interno que dibuja y rota la ruleta
+    //  Panel interno que dibuja y rota la ruleta
     private class RuletaPanel extends JPanel {
         @Override
         protected void paintComponent(Graphics g) {
@@ -323,16 +329,4 @@ public class VentanaJuego extends JFrame {
         lblTurnoJugador.setText("Turno del jugador: " + nombreJugador);
     }
 
-    public void actualizarValoresJugador(int indice, int posicion, int dolares, int casas, int familia) {
-        if (indice < 0 || indice >= labelsJugadores.length) return;
-        labelsJugadores[indice][0].setText("Pos: [" + String.format("%02d", posicion) + "]");
-        labelsJugadores[indice][1].setText("💲: [" + dolares + "]");
-        labelsJugadores[indice][2].setText("🏠: [" + String.format("%02d", casas) + "]");
-        labelsJugadores[indice][3].setText("👨‍👩‍👦: [" + String.format("%02d", familia) + "]");
-    }
-
-    public void actualizarProfesionJugador(int indice, String profesion) {
-        if (indice < 0 || indice >= labelsJugadores.length) return;
-        labelsJugadores[indice][4].setText("🎓: [" + profesion + "]");
-    }
 }

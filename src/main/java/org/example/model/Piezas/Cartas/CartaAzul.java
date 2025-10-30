@@ -1,7 +1,9 @@
 package org.example.model.Piezas.Cartas;
 
+import org.example.GUI.VentanaCarta;
 import org.example.bd.ConexionBD;
-import org.example.model.Piezas.Carta;
+import org.example.model.Jugadores.Jugador;
+import org.example.utils.PantallaColor;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,56 +11,83 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CartaAzul extends Carta {
+public class CartaAzul extends CartaNivel {
 
-   private int nivel;
-   private String titulo;
-   private int sueldo;
+    private String titulo;
+    private int sueldo;
+
+
+    public CartaAzul() {
+        super();
+    }
+
+    public CartaAzul(int nivel) {
+        super(nivel);
+    }
 
     // ==========================
     // GETTERS Y SETTERS
     // ==========================
+    public String getTitulo() { return titulo; }
+    public void setTitulo(String titulo) { this.titulo = titulo; }
 
-    public int getNivel() {return nivel;}
-    public void setNivel(int nivel) {this.nivel = nivel;}
+    public int getSueldo() { return sueldo; }
+    public void setSueldo(int sueldo) { this.sueldo = sueldo; }
 
-    public String getTitulo() {return titulo;}
-    public void setTitulo(String titulo) {this.titulo = titulo;}
+    @Override
+    public void accion(Jugador jugador) {
+        // Creamos una instancia usando el nivel actual
+        CartaAzul profesion = new CartaAzul(getNivel());
+        List<Integer> ids = profesion.obtenerRandom(getNivel());
 
-    public int getSueldo() {return sueldo;}
-    public void setSueldo(int sueldo) {this.sueldo = sueldo;}
+        if (ids.size() < 2) {
+            System.out.println("No hay suficientes profesiones para mostrar.");
+            return;
+        }
+
+        CartaAzul profesion1 = CartaAzul.buscarCartaId(ids.get(0));
+        CartaAzul profesion2 = CartaAzul.buscarCartaId(ids.get(1));
+
+        String[][] opciones = {
+                { "Profesión: " + profesion1.getTitulo(), "Salario: " + profesion1.getSueldo(), "Nivel: " + profesion1.getNivel() },
+                { "Profesión: " + profesion2.getTitulo(), "Salario: " + profesion2.getSueldo(), "Nivel: " + profesion2.getNivel() }
+        };
+
+        VentanaCarta ventana = new VentanaCarta("Elige una profesión", PantallaColor.AZUL, opciones);
+        int seleccion = ventana.mostrarYEsperarSeleccion();
+
+        if (seleccion == 1) {
+            jugador.actualizar("id_profesion", ids.get(0));
+            // ventanaJuego.actualizarProfesionJugador(jugador.getId(), profesion1.getTitulo());
+        } else if (seleccion == 2) {
+            jugador.actualizar("id_profesion", ids.get(1));
+            // ventanaJuego.actualizarProfesionJugador(jugador.getId(), profesion2.getTitulo());
+        }
+    }
 
     // ==========================
-    // METODOS BD
+    // MÉTODOS BD
     // ==========================
-
-    /*
-    Obtener random- Argumento:int nivel_buscado, el nivel de profesion 1-bajo, 2-medio, 3:alto
-    retorna lista de los ids random seleccionados
-    */
-    public List<Integer> obtenerRandom(int nivel_buscado){
-        String sqlBuscar = "SELECT * FROM CartaAzul WHERE nivel = ? ORDER BY RANDOM() LIMIT 2";
+    public List<Integer> obtenerRandom(int nivelBuscado) {
+        String sqlBuscar = "SELECT id FROM CartaAzul WHERE nivel = ? ORDER BY RANDOM() LIMIT 2";
         List<Integer> ids = new ArrayList<>();
-        try(Connection conn = new ConexionBD(ConexionBD.url_estatica).getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sqlBuscar)){
-            stmt.setInt(1,nivel_buscado);
+        try (Connection conn = new ConexionBD(ConexionBD.url_estatica).getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sqlBuscar)) {
+
+            stmt.setInt(1, nivelBuscado);
             ResultSet rs = stmt.executeQuery();
+
             while (rs.next()) {
                 ids.add(rs.getInt("id"));
             }
 
-        } catch (Exception e ){
-            System.out.println("Error al obtener profesion random: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error al obtener profesión random: " + e.getMessage());
         }
         return ids;
     }
 
-    /*
-    BuscarCartaId(id_casa): Busca en la bd la casa con el id del argumento y crea un objeto de tipo CartaAzul(profesion)
-    del que pueden consultarse propiedades usando getters y setters
-     */
-    public static CartaAzul buscarCartaId(int id_profesion){
-
+    public static CartaAzul buscarCartaId(int id_profesion) {
         String sql = "SELECT * FROM CartaAzul WHERE id = ?";
         CartaAzul carta = null;
 
@@ -69,11 +98,10 @@ public class CartaAzul extends Carta {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                carta = new CartaAzul();
+                carta = new CartaAzul(rs.getInt("nivel"));
                 carta.setId(rs.getInt("id"));
                 carta.setTitulo(rs.getString("titulo"));
                 carta.setSueldo(rs.getInt("sueldo"));
-                carta.setNivel(rs.getInt("nivel"));
             }
 
         } catch (Exception e) {
@@ -81,8 +109,5 @@ public class CartaAzul extends Carta {
         }
 
         return carta;
-
-
     }
-
 }
