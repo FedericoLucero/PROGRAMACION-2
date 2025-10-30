@@ -1,7 +1,11 @@
 package org.example.model.Piezas.Cartas;
 
+import org.example.GUI.VentanaCarta;
+import org.example.Juego;
 import org.example.bd.ConexionBD;
+import org.example.model.Jugadores.Jugador;
 import org.example.model.Piezas.Carta;
+import org.example.utils.PantallaColor;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -22,6 +26,15 @@ public class CartaRoja extends Carta {
 
     public int getValor() {return valor;}
     public void setValor(int valor) {this.valor = valor;}
+
+    @Override
+    public void accion(Jugador jugador) {
+        // Llamo una arta aleatoria de deuda, traigo el valor de patrimonio actual lo resto y luego actualizo
+        CartaRoja cartaRoja = CartaRoja.cartaRojaRandom();
+        VentanaCarta.mostrarCartaInformativa("Carta roja", "Te tocó carta roja", "paga impuesto: " + cartaRoja.getValor(), PantallaColor.ROJO);
+        Juego.cobrarCosto(jugador, cartaRoja.getValor());
+    }
+
     // ==========================
     //  METODOS BD
     // ==========================

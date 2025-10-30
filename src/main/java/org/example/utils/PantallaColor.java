@@ -13,4 +13,21 @@ public class PantallaColor {
     public static final Color NARANJA = new Color(255, 178, 102);   // naranja pastel
     public static final Color GRIS = new Color(220, 220, 220);      // gris pastel
     public static final Color BLANCO = new Color(255, 255, 255);    // blanco
+
+    public static Color obtenerColor(String color) {
+        switch (color.toLowerCase()) {
+            case "amarilla": return AMARILLO;
+            case "azul": return AZUL;
+            case "roja": return ROJO;
+            case "verde": return VERDE;
+            case "rosa": return ROSA;
+            case "naranja": return NARANJA;
+            case "stopazul":
+            case "stoprosa":
+            case "stopnaranja": return BLANCO;
+            default: return GRIS; // color no reconocido
+        }
+    }
+
+
 }
