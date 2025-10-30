@@ -27,6 +27,7 @@ public class Jugador {
     private CartaAzul profesion;
     private CartaNaranja casa;
     private int mascota;
+    private int ganancia; //Este atributo va contando cuanto gana el jugador con los npc y venta de casa
 
 
     // ==========================
@@ -121,13 +122,12 @@ public class Jugador {
     public CartaNaranja getCasa() {return casa;}
     public void setCasa(CartaNaranja casa) {this.casa = casa;}
 
-    public int getMascota() {
-        return mascota;
-    }
+    public int getMascota() {return mascota;}
+    public void setMascota(int mascota) {this.mascota = mascota;}
 
-    public void setMascota(int mascota) {
-        this.mascota = mascota;
-    }
+    public int getGanancia() {return ganancia;}
+    public void setGanancia(int ganancia) {this.ganancia = ganancia;}
+
     // ==========================
     // METODOS logicos
     // ==========================
@@ -210,7 +210,8 @@ public class Jugador {
             case "hijos": sql = "UPDATE jugador SET hijos=? WHERE id_jugador=?"; break;
             case "posicion": sql = "UPDATE jugador SET posicion=? WHERE id_jugador=?"; break;
             case "deudas": sql = "UPDATE jugador SET deudas=? WHERE id_jugador=?"; break;
-            case "id_casa": sql = "UPDATE jugador SET id_casa=? WHERE id_jugador=?"; break; // ← AGREGAR
+            case "id_casa": sql = "UPDATE jugador SET id_casa=? WHERE id_jugador=?"; break;
+            case "ganancia": sql = "UPDATE jugador SET ganancia=? where id_jugador=?"; break;
             default:
                 System.err.println("Campo no válido para tipo int: " + campo);
                 return false;
@@ -230,15 +231,14 @@ public class Jugador {
                     case "hijos" -> this.hijos = nuevoValor;
                     case "posicion" -> this.posicion = nuevoValor;
                     case "deudas" -> this.deuda = nuevoValor;
-                    // ↓ AGREGAR ESTOS CASOS - importante para id_profesion e id_casa
+                    //Actualizo estos parametros del objeto para evitar errores en calculos
                     case "id_profesion" -> {
-                        // Recargar la profesión desde BD
                         this.profesion = CartaAzul.buscarCartaId(nuevoValor);
                     }
                     case "id_casa" -> {
-                        // Recargar la casa desde BD
                         this.casa = CartaNaranja.buscarCartaId(nuevoValor);
                     }
+                    case "ganancia" -> this.ganancia = nuevoValor;
                 }
             }
             return filas > 0;

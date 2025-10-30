@@ -115,7 +115,7 @@ public class Juego {
             }
             cantMovActual++;
         } while (seguirPartida);
-
+        finalizar();
 
         // variable para finalizar juego
         boolean fin = jugarDeNuevo();
@@ -234,6 +234,9 @@ public class Juego {
 
         // Resto el costo de la accion
         cobrarCosto(jugadorTurno, cartaElegida.getCosto());
+        //Agrego ganancia para calcular ganador
+        int beneficio = cartaElegida.getBeneficio() + jugadorTurno.getGanancia();
+        jugadorTurno.actualizar("ganancia",beneficio);
 
         // Actualizo campos dependiendo del tipos
         switch (cartaElegida.getTipo()) {
@@ -269,7 +272,6 @@ public class Juego {
         } catch (Exception e) {
             System.out.println("Error al actualizar jugador con carta rosa: " + e.getMessage());
         }
-        System.out.println("la relacion cuesta: "+ cartaElegida.getCosto());
     }
 
     public void accionNaranja(Jugador jugadorTurno, int nivel) {
@@ -299,8 +301,11 @@ public class Juego {
             cobrarCosto(jugadorTurno, casaElegida.getPrecio_compra());
             jugadorTurno.actualizar("id_casa", casaElegida.getId());
             ventanaJuego.actualizarProfesionJugador(jugadorTurno.getId(), casaElegida.getDescripcion());
+            //Agrego ganancia para calcular ganador
+            int beneficio = casaElegida.getPrecio_venta() + jugadorTurno.getGanancia();
+            jugadorTurno.actualizar("ganancia",beneficio);
         }
-        System.out.println("pago de casa :" + casaElegida.getPrecio_compra());
+
     }
 
     public void agregarDeuda(Jugador jugador, int monto) {
@@ -334,6 +339,46 @@ public class Juego {
         }
     }
 
+    public void finalizar() {
+        System.out.println("===== RESULTADOS FINALES =====");
+
+        Jugador ganador = null;
+        int mayorResultado = Integer.MIN_VALUE;
+
+        // Recorremos todos los jugadores
+        for (Jugador jugador : jugadores) {
+            int ganancia = jugador.getGanancia();  // bienes acumulados
+            int deuda = jugador.getDeuda();        // deudas acumuladas
+            int patrimonio = jugador.getPatrimonio(); // dinero en mano
+            int resultadoFinal = ganancia + patrimonio - deuda;
+
+            System.out.println(
+                    "Jugador: " + jugador.getNombre() +
+                            " | Ganancia: " + ganancia +
+                            " | Patrimonio: " + patrimonio +
+                            " | Deuda: " + deuda +
+                            " | Resultado Final: " + resultadoFinal
+            );
+
+            // Actualizamos el jugador ganador
+            if (resultadoFinal > mayorResultado) {
+                mayorResultado = resultadoFinal;
+                ganador = jugador;
+            }
+        }
+
+        if (ganador != null) {
+            System.out.println("\n🏆 El ganador es: " + ganador.getNombre() + " con un total de " + mayorResultado);
+            VentanaCarta.mostrarCartaInformativa(
+                    "Fin del Juego",
+                    "¡Ganador!",
+                    "El jugador " + ganador.getNombre() + " obtuvo el mayor patrimonio neto: " + mayorResultado,
+                    PantallaColor.VERDE
+            );
+        } else {
+            System.out.println("\nNo se pudo determinar un ganador.");
+        }
+    }
 
     // ==========================
     // GETTERS Y SETTERS
