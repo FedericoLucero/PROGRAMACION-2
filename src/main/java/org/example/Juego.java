@@ -5,6 +5,7 @@ import org.example.GUI.*;
 
 import static org.example.utils.ConsolaColor.*;
 
+import org.example.model.Piezas.Carta;
 import org.example.model.Piezas.Ruleta;
 import org.example.utils.PantallaColor;
 
@@ -199,10 +200,9 @@ public class Juego {
 
         int pago = patrimonio + deuda; //Sumo porque los valores enn tabla ya son negativos
 
-        System.out.println("deuda "+deuda);
         jugadorTurno.actualizar("patrimonio",pago);
 
-
+        System.out.println("deuda "+ cartaRoja.getValor());
     }
 
     public void accionVerde(Jugador jugadorTurno) {
@@ -259,16 +259,12 @@ public class Juego {
                 break;
 
             case "Adoptar Mascota":
-                if (cartaElegida.getDescripcion().equalsIgnoreCase("Gato")) {
-                    jugadorTurno.setMascota(1); // 1 gato
-                } else {
-                    jugadorTurno.setMascota(2); // 2 perro
-                }
+                jugadorTurno.setMascota(cartaElegida.getId());
                 break;
         }
 
         //Actualizo bd dinamica
-        String sql = "UPDATE jugador SET patrimonio=?, hijos=?, estado_civil=?, mascota=? WHERE id_jugador=?";
+        String sql = "UPDATE jugador SET patrimonio=?, hijos=?, estado_civil=?, id_mascota=? WHERE id_jugador=?";
         try (Connection conn = new ConexionBD(ConexionBD.url_dinamica).getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
@@ -282,6 +278,7 @@ public class Juego {
         } catch (Exception e) {
             System.out.println("Error al actualizar jugador con carta rosa: " + e.getMessage());
         }
+        System.out.println("la relacion cuesta: "+ cartaElegida.getCosto());
     }
 
 
@@ -301,15 +298,40 @@ public class Juego {
         VentanaCarta ventana = new VentanaCarta("Elige una casa", PantallaColor.NARANJA, opciones);
         int seleccion = ventana.mostrarYEsperarSeleccion();
 
-        if (seleccion == 1){
-            jugadorTurno.actualizar("id_casa",ids.get(0).intValue());
-            ventanaJuego.actualizarProfesionJugador(jugadorTurno.getId(), casa1.getDescripcion());
-        }
-        if (seleccion == 2){
-            jugadorTurno.actualizar("id_casa",ids.get(1).intValue());
-            ventanaJuego.actualizarProfesionJugador(jugadorTurno.getId(), casa2.getDescripcion());
-        }
+        CartaNaranja casaElegida = switch (seleccion){
+            case 1 -> casa1;
+            case 2 -> casa2;
+            default -> null;
+        };
 
+        if (casaElegida != null){
+            // 1️⃣ Cobrar costo o generar deuda
+            cobrarCosto(jugadorTurno, casaElegida.getPrecio_compra());
+
+            // 2️⃣ Actualizar la casa en el jugador
+            jugadorTurno.actualizar("id_casa", casaElegida.getId());
+
+            // 3️⃣ Actualizar la interfaz (mostrar qué casa compró)
+            ventanaJuego.actualizarProfesionJugador(jugadorTurno.getId(), casaElegida.getDescripcion());
+        }
+        System.out.println("pago de casa :" + casaElegida.getPrecio_compra());
+    }
+
+    public void agregarDeuda(Jugador jugador, int monto) {
+        int deudaActual = jugador.getDeuda();
+        int nuevaDeuda = deudaActual + monto;
+        jugador.actualizar("deudas", nuevaDeuda);
+    }
+    public void cobrarCosto(Jugador jugador, int costo) {
+        int patrimonioActual = jugador.getPatrimonio();
+
+        if (patrimonioActual < costo) {
+            int deuda = costo - patrimonioActual;
+            jugador.actualizar("patrimonio", 0);
+            agregarDeuda(jugador, deuda);
+        } else {
+            jugador.actualizar("patrimonio", patrimonioActual - costo);
+        }
     }
 
     private void borrarDatosBDDinamica() {
