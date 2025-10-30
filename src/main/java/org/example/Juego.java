@@ -215,9 +215,9 @@ public class Juego {
         CartaRosa c3 = CartaRosa.buscarCartaId(ids.get(2));
 
         String[][] opcionesRosa = {
-                {"Accion: " + c1.getTipo() + "\n" + c1.getDescripcion() + "\n" + "Esta accion cuesta: " + c1.getCosto()},
-                {"Accion: " + c2.getTipo() + "\n" + c2.getDescripcion() + "\n" + "Esta accion cuesta: " + c2.getCosto()},
-                {"Accion: " + c3.getTipo() + "\n" + c3.getDescripcion() + "\n" + "Esta accion cuesta: " + c3.getCosto()}
+                {"Accion: " + c1.getTipo() , c1.getDescripcion()  , "Esta accion cuesta: " + c1.getCosto()},
+                {"Accion: " + c2.getTipo() , c2.getDescripcion()  , "Esta accion cuesta: " + c2.getCosto()},
+                {"Accion: " + c3.getTipo() , c3.getDescripcion()  , "Esta accion cuesta: " + c3.getCosto()}
         };
 
         VentanaCarta ventana = new VentanaCarta("Elige tu opción", PantallaColor.ROSA, opcionesRosa);
@@ -313,6 +313,7 @@ public class Juego {
         int nuevaDeuda = deudaActual + monto;
         jugador.actualizar("deudas", nuevaDeuda);
     }
+
     public void cobrarCosto(Jugador jugador, int costo) {
         int patrimonioActual = jugador.getPatrimonio();
 
