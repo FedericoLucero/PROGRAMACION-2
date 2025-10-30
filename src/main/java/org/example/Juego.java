@@ -190,19 +190,11 @@ public class Juego {
     }
 
     public void accionRoja(Jugador jugadorTurno){
-
         // Llamo una arta aleatoria de deuda, traigo el valor de patrimonio actual lo resto y luego actualizo
         CartaRoja cartaRoja = CartaRoja.cartaRojaRandom();
-        int deuda = cartaRoja.getValor();
-        int patrimonio = jugadorTurno.getPatrimonio();
+        VentanaCarta.mostrarCartaInformativa("Carta roja", "Te tocó carta roja", "paga impuesto: " + cartaRoja.getValor(), PantallaColor.ROJO);
+        cobrarCosto(jugadorTurno, cartaRoja.getValor());
 
-        VentanaCarta.mostrarCartaInformativa("Carta roja", "Te tocó carta roja", "paga impuesto: " + deuda, PantallaColor.ROJO);
-
-        int pago = patrimonio + deuda; //Sumo porque los valores enn tabla ya son negativos
-
-        jugadorTurno.actualizar("patrimonio",pago);
-
-        System.out.println("deuda "+ cartaRoja.getValor());
     }
 
     public void accionVerde(Jugador jugadorTurno) {
@@ -213,7 +205,6 @@ public class Juego {
         VentanaCarta.mostrarCartaInformativa("Carta Verde", "Te tocó carta verde", "Cobra bono: " + 1000, PantallaColor.VERDE);
         jugadorTurno.actualizar("patrimonio", bono);
     }
-
 
     public void accionRosa(Jugador jugadorTurno) {
         CartaRosa carta = new CartaRosa();
@@ -242,7 +233,7 @@ public class Juego {
         if (cartaElegida == null) return;
 
         // Resto el costo de la accion
-        jugadorTurno.setPatrimonio(jugadorTurno.getPatrimonio() - cartaElegida.getCosto());
+        cobrarCosto(jugadorTurno, cartaElegida.getCosto());
 
         // Actualizo campos dependiendo del tipos
         switch (cartaElegida.getTipo()) {
@@ -281,7 +272,6 @@ public class Juego {
         System.out.println("la relacion cuesta: "+ cartaElegida.getCosto());
     }
 
-
     public void accionNaranja(Jugador jugadorTurno, int nivel) {
         CartaNaranja casa = new CartaNaranja();
         List<Integer> ids = casa.obtenerRandom(nivel);
@@ -305,13 +295,9 @@ public class Juego {
         };
 
         if (casaElegida != null){
-            // 1️⃣ Cobrar costo o generar deuda
+            //Atualizacion de campo y cobro de deuda
             cobrarCosto(jugadorTurno, casaElegida.getPrecio_compra());
-
-            // 2️⃣ Actualizar la casa en el jugador
             jugadorTurno.actualizar("id_casa", casaElegida.getId());
-
-            // 3️⃣ Actualizar la interfaz (mostrar qué casa compró)
             ventanaJuego.actualizarProfesionJugador(jugadorTurno.getId(), casaElegida.getDescripcion());
         }
         System.out.println("pago de casa :" + casaElegida.getPrecio_compra());

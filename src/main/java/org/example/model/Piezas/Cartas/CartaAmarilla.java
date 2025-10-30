@@ -4,7 +4,5 @@ import org.example.model.Jugadores.Jugador;
 import org.example.model.Piezas.Carta;
 
 public class CartaAmarilla extends Carta {
-    public void cobrarDeudaEjemplo(Jugador jugador) {
-        agregarDeuda(jugador, 1000);
-    }
+
 }

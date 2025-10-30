@@ -16,7 +16,7 @@ public class Jugador {
     private String nombre;
     private int posicion;
 
-    private ArrayList<NPC> familia; // todo esto ya no srive?
+    private ArrayList<NPC> familia; // todo esto ya no srive? // ES MUY DIFICIL DE IMPLEMENTAR ASI Q NO
     private ArrayList<Casa> casas; // todo esta ya no srive?
 
     private int patrimonio;
