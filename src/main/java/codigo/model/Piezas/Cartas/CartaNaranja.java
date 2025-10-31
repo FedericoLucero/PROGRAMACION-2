@@ -9,7 +9,6 @@ import codigo.utils.PantallaColor;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.List;
 
 public class CartaNaranja extends CartaNivel {
@@ -29,7 +28,7 @@ public class CartaNaranja extends CartaNivel {
     @Override
     public void accion(Jugador jugador) {
         CartaNaranja casa = new CartaNaranja(getNivel());
-        List<Integer> ids = casa.obtenerRandom(getNivel());
+        List<Integer> ids = casa.obtenerRandom("CartaNaranja",getNivel(),2);
 
         if (ids.size() < 2) {
             System.out.println("No hay suficientes casas para mostrar.");
@@ -76,25 +75,8 @@ public class CartaNaranja extends CartaNivel {
     public void setPrecio_venta(int precio_venta) { this.precio_venta = precio_venta; }
 
     // ==========================
-    // MÉTODOS BD
+    // METODOS BD
     // ==========================
-    public List<Integer> obtenerRandom(int nivelBuscado) {
-        String sqlBuscar = "SELECT id FROM CartaNaranja WHERE nivel = ? ORDER BY RANDOM() LIMIT 2";
-        List<Integer> ids = new ArrayList<>();
-        try (Connection conn = new ConexionBD(ConexionBD.url_estatica).getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sqlBuscar)) {
-
-            stmt.setInt(1, nivelBuscado);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                ids.add(rs.getInt("id"));
-            }
-
-        } catch (Exception e) {
-            System.out.println("Error al obtener casa random: " + e.getMessage());
-        }
-        return ids;
-    }
 
     public static CartaNaranja buscarCartaId(int id_casa) {
         String sql = "SELECT * FROM CartaNaranja WHERE id = ?";

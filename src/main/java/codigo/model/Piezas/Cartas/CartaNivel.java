@@ -3,7 +3,7 @@ package codigo.model.Piezas.Cartas;
 import codigo.model.Jugadores.Jugador;
 import codigo.model.Piezas.Carta;
 
-public class CartaNivel extends Carta {
+public class CartaNivel extends CartaRandom {
 
     private int nivel;
 

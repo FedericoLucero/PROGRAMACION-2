@@ -12,8 +12,9 @@ import java.util.List;
 public abstract class CartaRandom extends Carta {
 
     // ==========================
-    // Metodo genérico obtenerRandom
+    // Metodo generico obtenerRandom
     // ==========================
+
     // Para cartas que no necesitan nivel
     public List<Integer> obtenerRandom(String tabla, int limite) {
         List<Integer> ids = new ArrayList<>();
@@ -53,6 +54,6 @@ public abstract class CartaRandom extends Carta {
         return ids;
     }
 
-    // Método abstracto para que cada carta defina cómo usarlo
+    // Metodo abstracto para que cada carta defina cómo usarlo
     public abstract void accion(codigo.model.Jugadores.Jugador jugador);
 }

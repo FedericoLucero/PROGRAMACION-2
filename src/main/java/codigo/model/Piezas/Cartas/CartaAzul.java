@@ -38,7 +38,7 @@ public class CartaAzul extends CartaNivel {
     public void accion(Jugador jugador) {
         // Creamos una instancia usando el nivel actual
         CartaAzul profesion = new CartaAzul(getNivel());
-        List<Integer> ids = profesion.obtenerRandom(getNivel());
+        List<Integer> ids = profesion.obtenerRandom("CartaAzul", getNivel(),2);
 
         if (ids.size() < 2) {
             System.out.println("No hay suficientes profesiones para mostrar.");
@@ -68,24 +68,6 @@ public class CartaAzul extends CartaNivel {
     // ==========================
     // MÉTODOS BD
     // ==========================
-    public List<Integer> obtenerRandom(int nivelBuscado) {
-        String sqlBuscar = "SELECT id FROM CartaAzul WHERE nivel = ? ORDER BY RANDOM() LIMIT 2";
-        List<Integer> ids = new ArrayList<>();
-        try (Connection conn = new ConexionBD(ConexionBD.url_estatica).getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sqlBuscar)) {
-
-            stmt.setInt(1, nivelBuscado);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                ids.add(rs.getInt("id"));
-            }
-
-        } catch (Exception e) {
-            System.out.println("Error al obtener profesión random: " + e.getMessage());
-        }
-        return ids;
-    }
 
     public static CartaAzul buscarCartaId(int id_profesion) {
         String sql = "SELECT * FROM CartaAzul WHERE id = ?";
