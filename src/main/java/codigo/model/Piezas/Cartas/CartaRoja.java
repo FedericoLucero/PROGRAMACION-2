@@ -4,15 +4,14 @@ import codigo.GUI.VentanaCarta;
 import codigo.Juego;
 import codigo.bd.ConexionBD;
 import codigo.model.Jugadores.Jugador;
-import codigo.model.Piezas.Carta;
 import codigo.utils.PantallaColor;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.Random;
+import java.util.List;
 
-public class CartaRoja extends Carta {
+public class CartaRoja extends CartaRandom {
 
     private String descripcion;
     private int valor;
@@ -29,40 +28,38 @@ public class CartaRoja extends Carta {
 
     @Override
     public void accion(Jugador jugador) {
-        // Llamo una arta aleatoria de deuda, traigo el valor de patrimonio actual lo resto y luego actualizo
-        CartaRoja cartaRoja = CartaRoja.cartaRojaRandom();
-        VentanaCarta.mostrarCartaInformativa("Carta roja", "Te tocó carta roja", "paga impuesto: " + cartaRoja.getValor(), PantallaColor.ROJO);
+        List<Integer> ids = obtenerRandom("CartaRoja", 1);
+
+        if (ids.isEmpty()) {
+            System.out.println("No se encontró ninguna carta roja aleatoria.");
+            return;
+        }
+
+        CartaRoja cartaRoja = CartaRoja.buscarCartaPorId(ids.get(0));
+        VentanaCarta.mostrarCartaInformativa("Carta roja", "Te tocó carta roja", "Paga impuesto: " + cartaRoja.getValor(), PantallaColor.ROJO);
+
         Juego.cobrarCosto(jugador, cartaRoja.getValor());
     }
 
-    // ==========================
-    //  METODOS BD
-    // ==========================
-
-    public static CartaRoja cartaRojaRandom(){
-        Random rdm = new Random();
-        int carta_random = rdm.nextInt(0,10);
+    public static CartaRoja buscarCartaPorId(int id) {
         String sql = "SELECT * FROM CartaRoja WHERE id = ?";
         CartaRoja carta = new CartaRoja();
         try (Connection conn = new ConexionBD(ConexionBD.url_estatica).getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setInt(1, carta_random);
+            stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                carta = new CartaRoja();
                 carta.setId(rs.getInt("id"));
                 carta.setDescripcion(rs.getString("descripcion"));
                 carta.setValor(rs.getInt("valor"));
             }
 
         } catch (Exception e) {
-            System.out.println("Error al buscar carta naranja: " + e.getMessage());
+            System.out.println("Error al buscar carta roja: " + e.getMessage());
         }
 
         return carta;
-
     }
-
 }

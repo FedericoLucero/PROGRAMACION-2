@@ -13,7 +13,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CartaRosa extends Carta {
+public class CartaRosa extends CartaRandom {
     private int id;
     private String tipo;
     private String descripcion;
@@ -43,7 +43,7 @@ public class CartaRosa extends Carta {
     @Override
     public void accion(Jugador jugadorTurno) {
         CartaRosa carta = new CartaRosa();
-        List<Integer> ids = carta.obtenerRandom();
+        List<Integer> ids = obtenerRandom("CartaRosa", 3);
 
         CartaRosa c1 = CartaRosa.buscarCartaId(ids.get(0));
         CartaRosa c2 = CartaRosa.buscarCartaId(ids.get(1));
@@ -117,21 +117,6 @@ public class CartaRosa extends Carta {
     // ==========================
     public int getCosto() {return costo;}
     public void setCosto(int costo) {this.costo = costo;}
-
-    public List<Integer> obtenerRandom(){
-        String sqlBuscar = "SELECT * FROM CartaRosa ORDER BY RANDOM() LIMIT 3";
-        List<Integer> ids = new ArrayList<>();
-        try(Connection conn = new ConexionBD(ConexionBD.url_estatica).getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sqlBuscar)){
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                ids.add(rs.getInt("id"));
-            }
-        } catch (Exception e ){
-            System.out.println("Error al obtener carta rosa random: " + e.getMessage());
-        }
-        return ids;
-    }
 
     public static CartaRosa buscarCartaId(int id_npc){
 
