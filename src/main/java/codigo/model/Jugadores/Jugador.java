@@ -1,9 +1,8 @@
 package codigo.model.Jugadores;
 
 import codigo.bd.ConexionBD;
-import codigo.model.Piezas.Cartas.CartaAzul;
-import codigo.model.Piezas.Cartas.CartaNaranja;
-import codigo.model.Piezas.Cartas.*;
+import codigo.model.Piezas.Cartas.Random.Nivelada.CartaAzul;
+import codigo.model.Piezas.Cartas.Random.Nivelada.CartaNaranja;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

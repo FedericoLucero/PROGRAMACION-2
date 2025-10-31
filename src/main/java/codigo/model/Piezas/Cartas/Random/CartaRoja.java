@@ -1,4 +1,4 @@
-package codigo.model.Piezas.Cartas;
+package codigo.model.Piezas.Cartas.Random;
 
 import codigo.GUI.VentanaCarta;
 import codigo.Juego;

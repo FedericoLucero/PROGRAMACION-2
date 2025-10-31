@@ -1,6 +1,10 @@
 package codigo.model.Piezas.Cartas;
 
 import codigo.GUI.VentanaCarta;
+import codigo.model.Piezas.Cartas.Random.Nivelada.CartaAzul;
+import codigo.model.Piezas.Cartas.Random.Nivelada.CartaNaranja;
+import codigo.model.Piezas.Cartas.Random.CartaRoja;
+import codigo.model.Piezas.Cartas.Random.CartaRosa;
 import codigo.model.Piezas.Tablero;
 import codigo.utils.PantallaColor;
 import codigo.model.Jugadores.Jugador;

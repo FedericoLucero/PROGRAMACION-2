@@ -1,4 +1,4 @@
-package codigo.model.Piezas.Cartas;
+package codigo.model.Piezas.Cartas.Random.Nivelada;
 
 import codigo.GUI.VentanaCarta;
 import codigo.bd.ConexionBD;
@@ -8,10 +8,9 @@ import codigo.utils.PantallaColor;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.List;
 
-public class CartaAzul extends CartaNivel {
+public class CartaAzul extends CartaNivelada {
 
     private String titulo;
     private int sueldo;

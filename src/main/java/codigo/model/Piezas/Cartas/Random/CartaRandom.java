@@ -1,4 +1,4 @@
-package codigo.model.Piezas.Cartas;
+package codigo.model.Piezas.Cartas.Random;
 
 import codigo.bd.ConexionBD;
 import codigo.model.Piezas.Carta;

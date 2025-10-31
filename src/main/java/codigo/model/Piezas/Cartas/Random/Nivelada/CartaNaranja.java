@@ -1,4 +1,4 @@
-package codigo.model.Piezas.Cartas;
+package codigo.model.Piezas.Cartas.Random.Nivelada;
 
 import codigo.GUI.VentanaCarta;
 import codigo.Juego;
@@ -11,7 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
 
-public class CartaNaranja extends CartaNivel {
+public class CartaNaranja extends CartaNivelada {
 
     private String descripcion;
     private int precio_compra;

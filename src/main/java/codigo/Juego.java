@@ -6,16 +6,17 @@ import codigo.GUI.VentanaCarta;
 import codigo.GUI.VentanaJuego;
 import codigo.model.Jugadores.Jugador;
 import codigo.model.Piezas.Cartas.*;
-import codigo.GUI.*;
 
 import codigo.model.Piezas.Carta;
+import codigo.model.Piezas.Cartas.Random.Nivelada.CartaAzul;
+import codigo.model.Piezas.Cartas.Random.Nivelada.CartaNaranja;
+import codigo.model.Piezas.Cartas.Random.CartaRoja;
+import codigo.model.Piezas.Cartas.Random.CartaRosa;
 import codigo.model.Piezas.Ruleta;
 import codigo.utils.PantallaColor;
 
 import codigo.bd.ConexionBD;
 
-import codigo.model.Jugadores.*;
-import codigo.model.Piezas.Cartas.*;
 import codigo.model.Piezas.Casilla;
 import codigo.model.Piezas.Tablero;
 

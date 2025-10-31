@@ -1,16 +1,14 @@
-package codigo.model.Piezas.Cartas;
+package codigo.model.Piezas.Cartas.Random;
 
 import codigo.GUI.VentanaCarta;
 import codigo.bd.ConexionBD;
 import codigo.model.Jugadores.Jugador;
-import codigo.model.Piezas.Carta;
 import codigo.utils.PantallaColor;
 import codigo.Juego;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.List;
 
 public class CartaRosa extends CartaRandom {
