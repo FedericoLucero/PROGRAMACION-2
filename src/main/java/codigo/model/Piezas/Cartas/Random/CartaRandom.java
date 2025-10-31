@@ -54,6 +54,6 @@ public abstract class CartaRandom extends Carta {
         return ids;
     }
 
-    // Metodo abstracto para que cada carta defina cómo usarlo
+    // Metodo abstracto para que cada carta defina como usarlo
     public abstract void accion(codigo.model.Jugadores.Jugador jugador);
 }

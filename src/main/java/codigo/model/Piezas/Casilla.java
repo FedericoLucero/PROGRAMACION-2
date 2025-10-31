@@ -18,7 +18,7 @@ public class Casilla {
     }
 
     // ==========================
-    // MÉTODOS DE BASE DE DATOS
+    // METODOS DE BASE DE DATOS
     // ==========================
 
     /**

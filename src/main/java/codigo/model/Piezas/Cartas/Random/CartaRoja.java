@@ -26,6 +26,10 @@ public class CartaRoja extends CartaRandom {
     public int getValor() {return valor;}
     public void setValor(int valor) {this.valor = valor;}
 
+    // ==========================
+    // METODOS PROPIOS
+    // ==========================
+
     @Override
     public void accion(Jugador jugador) {
         List<Integer> ids = obtenerRandom("CartaRoja", 1);
@@ -40,6 +44,10 @@ public class CartaRoja extends CartaRandom {
 
         Juego.cobrarCosto(jugador, cartaRoja.getValor());
     }
+
+    // ==========================
+    // METODOS DE BD
+    // ==========================
 
     public static CartaRoja buscarCartaPorId(int id) {
         String sql = "SELECT * FROM CartaRoja WHERE id = ?";

@@ -18,11 +18,19 @@ public class CartaAmarilla extends Carta {
     private Ruleta ruleta;
     private VentanaJuego ventanaJuego;
 
+    // ==========================
+    // CONSTRUCTORES
+    // ==========================
+
     public CartaAmarilla(Tablero tablero, Ruleta ruleta, VentanaJuego ventanaJuego) {
         this.tablero = tablero;
         this.ruleta = ruleta;
         this.ventanaJuego = ventanaJuego;
     }
+
+    // ==========================
+    // METODOS PROPIOS
+    // ==========================
 
     @Override
     public void accion(Jugador jugadorTurno) {

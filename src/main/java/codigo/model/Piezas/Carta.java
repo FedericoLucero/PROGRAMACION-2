@@ -5,13 +5,21 @@ import codigo.model.Jugadores.Jugador;
 public abstract class Carta {
     private int id;
 
+    // ==========================
+    // GETTERS Y SETTERS
+    // ==========================
+
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
-    // Mtodo polimórfico (todas las cartas lo redefinen)
+    // ==========================
+    // METODOS PROPIOS
+    // ==========================
+
+    // Metodo polimórfico (todas las cartas lo redefinen)
     public abstract void accion(Jugador jugador);
 
-    // Sobrecargado (solo algunas cartas usarán)
+    // Sobrecargado
     public void accion(Jugador jugador, int nivel) {
         accion(jugador);
     }

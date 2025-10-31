@@ -24,7 +24,6 @@ public class Jugador {
     private int mascota;
     private int ganancia; //Este atributo va contando cuanto gana el jugador con los npc y venta de casa
 
-
     // ==========================
     // CONSTRUCTORES
     // ==========================
@@ -39,11 +38,7 @@ public class Jugador {
         this.hijos = 0;
         this.deuda = 0;
     }
-
-    public Jugador() {
-    }
-
-    ;
+    public Jugador() {}
 
     public Jugador(String nombre) {
         this(0, nombre);

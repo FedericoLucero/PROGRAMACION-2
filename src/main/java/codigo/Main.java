@@ -1,5 +1,10 @@
 package codigo;
 
+/**
+ *  Proyecto Integrador Programacion II
+ *  Bianca cristin
+ *  Federico Lucero
+ */
 
 public class Main {
 

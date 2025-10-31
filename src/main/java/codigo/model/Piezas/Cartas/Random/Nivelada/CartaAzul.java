@@ -15,6 +15,9 @@ public class CartaAzul extends CartaNivelada {
     private String titulo;
     private int sueldo;
 
+    // ==========================
+    // CONSTRUCTORES
+    // ==========================
 
     public CartaAzul() {
         super();
@@ -27,6 +30,7 @@ public class CartaAzul extends CartaNivelada {
     // ==========================
     // GETTERS Y SETTERS
     // ==========================
+
     public String getTitulo() { return titulo; }
     public void setTitulo(String titulo) { this.titulo = titulo; }
 
@@ -65,7 +69,7 @@ public class CartaAzul extends CartaNivelada {
     }
 
     // ==========================
-    // MÉTODOS BD
+    // METODOS BD
     // ==========================
 
     public static CartaAzul buscarCartaId(int id_profesion) {

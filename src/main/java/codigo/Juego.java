@@ -2,23 +2,17 @@ package codigo;
 
 import static codigo.GUI.InputsPaneles.*;
 
-import codigo.GUI.VentanaCarta;
-import codigo.GUI.VentanaJuego;
-import codigo.model.Jugadores.Jugador;
-import codigo.model.Piezas.Cartas.*;
+import codigo.GUI.*;
 
-import codigo.model.Piezas.Carta;
-import codigo.model.Piezas.Cartas.Random.Nivelada.CartaAzul;
-import codigo.model.Piezas.Cartas.Random.Nivelada.CartaNaranja;
-import codigo.model.Piezas.Cartas.Random.CartaRoja;
-import codigo.model.Piezas.Cartas.Random.CartaRosa;
-import codigo.model.Piezas.Ruleta;
+import codigo.model.Jugadores.*;
+import codigo.model.Piezas.*;
+import codigo.model.Piezas.Cartas.*;
+import codigo.model.Piezas.Cartas.Random.*;
+import codigo.model.Piezas.Cartas.Random.Nivelada.*;
+
 import codigo.utils.PantallaColor;
 
 import codigo.bd.ConexionBD;
-
-import codigo.model.Piezas.Casilla;
-import codigo.model.Piezas.Tablero;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -34,9 +28,17 @@ public class Juego {
     private int finJuego;
     private VentanaJuego ventanaJuego;
 
+    // ==========================
+    // CONSTRUCTORES
+    // ==========================
 
     public Juego() {}
 
+
+    /**
+     * metodo principal del juego
+     * @return verdadero o falso segun si se quiere seguir jugando
+     */
     public boolean jugar() {
 
         inicializar(); // inicializa atributos del juego
@@ -74,11 +76,13 @@ public class Juego {
                     }
 
                 } else {
+                    // el jugador llego al final
                     ventanaJuego.setDescripcion("¡Llegaste al final!", "Posición: " + siguientePosicion, PantallaColor.BLANCO);
                     jugadorTurno.moverJugador(tablero.getCantCasillas());
                     finJuego -= 1;
                 }
 
+                // actualizamos los datos en el panel
                 ventanaJuego.actualizarDatosJugador(jugadores,cantMovActual % jugadores.length, siguientePosicion);
 
                 if (finJuego == 0) {
@@ -103,6 +107,9 @@ public class Juego {
         return fin;
     }
 
+    /**
+     * metodo que inicializa los atributos del juego
+     */
     public void inicializar() {
 
         this.jugadores = pedirNombresJugadores(pedirCantidadJugadores());
@@ -115,12 +122,23 @@ public class Juego {
         }
     }
 
+    /**
+     * metodo que cambia el jugador de turno
+     * @param cantMovActual
+     * @return jugador
+     */
     public Jugador cambiarJugador(int cantMovActual) {
         Jugador jugadorTurno = jugadores[cantMovActual % jugadores.length];
         ventanaJuego.setTurnoJugador(jugadorTurno.getNombre());
         return jugadorTurno;
     }
 
+    /**
+     * metodo auxiliar para aplicar polimorfismo
+     * @param color
+     * @param nivel
+     * @return carta de color
+     */
     private Carta crearCartaPorColor(String color, int nivel) {
         return switch (color.toLowerCase()) {
             case "amarilla" -> new CartaAmarilla(tablero, ruleta, ventanaJuego);
@@ -133,12 +151,22 @@ public class Juego {
         };
     }
 
+    /**
+     * metodo que agrega deuda al jugador
+     * @param jugador
+     * @param monto
+     */
     public static void agregarDeuda(Jugador jugador, int monto) {
         int deudaActual = jugador.getDeuda();
         int nuevaDeuda = deudaActual + monto;
         jugador.actualizar("deudas", nuevaDeuda);
     }
 
+    /**
+     * metodo que le copra el costo de algo al jugador
+     * @param jugador
+     * @param costo
+     */
     public static void cobrarCosto(Jugador jugador, int costo) {
         int patrimonioActual = jugador.getPatrimonio();
 
@@ -151,6 +179,9 @@ public class Juego {
         }
     }
 
+    /**
+     * elimina informacion de la base de datos dinamica
+     */
     private void borrarDatosBDDinamica() {
         String sql = "DELETE FROM jugador";
 
@@ -165,6 +196,9 @@ public class Juego {
         }
     }
 
+    /**
+     *  metodo que filaza el juego dando un ganador
+     */
     public void finalizar() {
         System.out.println("===== RESULTADOS FINALES =====");
 

@@ -27,7 +27,7 @@ public class Tablero {
     public void setCantCasillas(int cantCasillas) {this.cantCasillas = cantCasillas;}
 
     // ==========================
-    // MÉTODOS DE BASE DE DATOS
+    // METODOS DE BASE DE DATOS
     // ==========================
 
     /**
@@ -170,8 +170,4 @@ public class Tablero {
             return 3;
         }
     }
-
-
-
-
 }

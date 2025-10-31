@@ -109,10 +109,10 @@ public class CartaRosa extends CartaRandom {
         }
     }
 
-
     // ==========================
     // METODOS DE BD
     // ==========================
+
     public int getCosto() {return costo;}
     public void setCosto(int costo) {this.costo = costo;}
 
