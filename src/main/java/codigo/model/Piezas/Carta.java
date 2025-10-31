@@ -20,7 +20,5 @@ public abstract class Carta {
     public abstract void accion(Jugador jugador);
 
     // Sobrecargado
-    public void accion(Jugador jugador, int nivel) {
-        accion(jugador);
-    }
+    public void accion(Jugador jugador, int nivel) {}
 }

@@ -12,7 +12,7 @@ import java.sql.ResultSet;
 import java.util.List;
 
 public class CartaRosa extends CartaRandom {
-    private int id;
+
     private String tipo;
     private String descripcion;
     private int beneficio;
@@ -21,9 +21,6 @@ public class CartaRosa extends CartaRandom {
     // ==========================
     // GETTERS Y SETTERS
     // ==========================
-
-    @Override public int getId() {return id;}
-    @Override public void setId(int id) {this.id = id;}
 
     public String getTipo() {return tipo;}
     public void setTipo(String tipo) {this.tipo = tipo;}
@@ -40,7 +37,7 @@ public class CartaRosa extends CartaRandom {
 
     @Override
     public void accion(Jugador jugadorTurno) {
-        CartaRosa carta = new CartaRosa();
+
         List<Integer> ids = obtenerRandom("CartaRosa", 3);
 
         CartaRosa c1 = CartaRosa.buscarCartaId(ids.get(0));

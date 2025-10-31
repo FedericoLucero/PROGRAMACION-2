@@ -65,6 +65,7 @@ public class CartaNaranja extends CartaNivelada {
     // ==========================
     // GETTERS Y SETTERS
     // ==========================
+
     public String getDescripcion() { return descripcion; }
     public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
 

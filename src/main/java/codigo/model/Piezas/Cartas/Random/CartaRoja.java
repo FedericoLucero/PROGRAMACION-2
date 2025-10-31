@@ -51,6 +51,7 @@ public class CartaRoja extends CartaRandom {
 
     public static CartaRoja buscarCartaPorId(int id) {
         String sql = "SELECT * FROM CartaRoja WHERE id = ?";
+
         CartaRoja carta = new CartaRoja();
         try (Connection conn = new ConexionBD(ConexionBD.url_estatica).getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
